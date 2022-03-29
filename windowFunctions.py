@@ -1,5 +1,4 @@
 import os
-import requests
 
 class ANSI():
     def background(code):
@@ -27,7 +26,7 @@ def clearConsole():
 #main-main_oneside
 def main_oneside(left):
     left[0] = " " + left[0]
-    print (ANSI.background(left[1])+ ANSI.color(left[2]) + left[0])
+    print (ANSI.background(left[1])+ ANSI.color(left[2]) + left[0] + ANSI.background(0) + ANSI.color(97))
 
 #main-main_twoside
 def main_twoside(left, right):
@@ -38,18 +37,18 @@ def main_twoside(left, right):
     spaces = ""
     for x in range(50-len(right[0])-len(left[0])):
       spaces = spaces + " "
-    print (ANSI.background(left[1])+ ANSI.color(left[2]) + left[0] + spaces + right[0])
+    print (ANSI.background(left[1])+ ANSI.color(left[2]) + left[0] + spaces + right[0] + ANSI.background(0) + ANSI.color(97))
 
 #main-line
 def main_line(mode):
 
     if mode == 0:    
-        printer("__________________________________________________", 40, 31)
+        printer("__________________________________________________", 0, 31)
     elif mode == 1:
         print("")
-        printer("__________________________________________________", 40, 31)
+        printer("__________________________________________________", 0, 31)
     elif mode == 2:
-        printer("__________________________________________________", 40, 31)
+        printer("__________________________________________________", 0, 31)
         print("")
 
 #main-list
@@ -72,6 +71,6 @@ def main_list(abbreviation, detail, status):
 
     #Form strings
     abbreviation = ANSI.background(41)+ ANSI.color(97) + " " + abbreviation + " "
-    detail = ANSI.background(40)+ ANSI.color(97) + " " + detail + spaces
+    detail = ANSI.background(0)+ ANSI.color(97) + " " + detail + spaces
     
-    print(abbreviation + detail + status)
+    print(abbreviation + detail + status + ANSI.background(0) + ANSI.color(97))
