@@ -1,41 +1,65 @@
 import os
 import requests
-from subprocess import Popen, CREATE_NEW_CONSOLE
+import subprocess
+
+if os.name in ('nt', 'dos'):
+	from subprocess import CREATE_NEW_CONSOLE
 
 import windowFunctions
 
-def vpn():
+def getVPNStatus():
 
     if os.name in ('nt', 'dos'):
-        global process
-        process = Popen('cmd', creationflags=CREATE_NEW_CONSOLE)
+        return windowFunctions.ANSI(33) + "Not supported"
     else:
-        subprocess.Popen("airmon-ng check kill", shell=True)
-
+        try:
+            #subprocess.check_output(["ifconfig", "tun0"])
+            stdout = subprocess.run(["ifconfig", "tun0"], check=True, capture_output=True, text=True).stdout
+            return windowFunctions.ANSI(32) + "Connected"
+        except:
+            return windowFunctions.ANSI(31) + "Diconnected"
+    
+def vpn():
+    windowFunctions.clear()
+    
+    windowFunctions.list("d", "Disconnect", "")
+    windowFunctions.spacing()
+    windowFunctions.list("e", "Exit", "Exit to main menu")
+    
     #BOTTOM: What do you want to do?
     windowFunctions.seperator()
     windowFunctions.spacing()
     windowFunctions.text(["What do you want to do?", 41, 97])
 
-    #command = input()
-    #if command == "exit" or command == "e":
-    main()
+    command = input()
+    if command == "d":
+        
+        try:
+            stdout = subprocess.run(["sudo", "killall", "openvpn"], check=True, capture_output=True, text=True).stdout
+        except:
+            main()
+        main()
+    elif command == "exit" or command == "e":
+        main()
+    else:
+       vpn()
 
 #WINDOW main
 def main():
     windowFunctions.clear()
 
     #Main window top
-    windowFunctions.text(["3P0H0PE 0.0.4", 41, 97], ["by BE3dARt with <3", 41, 97])
+    windowFunctions.text(["3P0H0PE 0.0.5", 41, 97], ["by BE3dARt with <3", 41, 97])
     windowFunctions.spacing()
-    windowFunctions.text(["Public IPv4: " + windowFunctions.ANSI(32) + requests.get('https://api.ipify.org').text, 0, 97])
+    # + requests.get('https://api.ipify.org').text
+    windowFunctions.text(["Public IPv4: " + windowFunctions.ANSI(32), 0, 97])
 
     #Seperator
     windowFunctions.seperator()
     windowFunctions.spacing()
 
     #Main list
-    windowFunctions.list("v", "VPN settings", "Connected to HTB")
+    windowFunctions.list("v", "VPN settings", getVPNStatus())
     windowFunctions.spacing()
     windowFunctions.list("a", "Applications", "")
     windowFunctions.spacing()
@@ -49,18 +73,13 @@ def main():
     windowFunctions.seperator()
     windowFunctions.spacing()
     windowFunctions.text(["What do you want to do?", 41, 97])
+    windowFunctions.spacing()
 
     command = input()
     if command == "v":
         vpn()
-    elif command == "c":
-        if "process" in globals():
-            print(process.poll())
-            
-        x = input()
-        main()
     elif command == "exit" or command == "e":
-        os.exit()
+        quit()
     else:
         main()
    
