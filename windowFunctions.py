@@ -14,8 +14,11 @@ def clear():
         command = 'clear'
     os.system(command)
 
+def spacing():
+    print("")
+
 #Draw normal text
-def normal(left = None, right = None):
+def text(left = None, right = None):
     left[0] = " " + left[0]
 
     if right == None:
@@ -27,19 +30,14 @@ def normal(left = None, right = None):
           spaces = spaces + " "
         print (ANSI(left[1])+ ANSI(left[2]) + left[0] + spaces + right[0] + ANSI(0) + ANSI(97))
 
-#Draw a line across whole width
-def line(mode):
+#Draw a seperator across whole width
+def seperator():
 
     lineString = ""
     for x in range(windowWidth):
         lineString = lineString + "_"
 
-    if mode == 0:
-        print(ANSI(0) + ANSI(31) + lineString + ANSI(40) + ANSI(97))
-    elif mode == 1:
-        print(ANSI(0) + ANSI(31) + "\n" + lineString + ANSI(40) + ANSI(97))
-    elif mode == 2:
-        print(ANSI(0) + ANSI(31) + lineString + "\n" + ANSI(40) + ANSI(97))
+    print(ANSI(0) + ANSI(31) + lineString + ANSI(40) + ANSI(97))
 
 #Draw a list with an abbreviation, a detail and a status
 def list(abbreviation, detail, status):
