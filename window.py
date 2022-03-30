@@ -5,29 +5,29 @@ import windowFunctions
 
 #WINDOW main
 def main():
-    windowFunctions.clearConsole()
-    
+    windowFunctions.clear()
+
     #Main window top
-    windowFunctions.main_twoside(["3P0H0PE 0.0.1", 41, 97], ["by BE3dARt with <3", 41, 97])
+    windowFunctions.normal(["3P0H0PE 0.0.3", 41, 97], ["by BE3dARt with <3", 41, 97])
     print("")
-    windowFunctions.main_oneside(["Public IPv4: " + windowFunctions.ANSI.color(32) + requests.get('https://api.ipify.org').text, 0, 97])
-    windowFunctions.main_line(2)
+    windowFunctions.normal(["Public IPv4: " + windowFunctions.ANSI(32) + requests.get('https://api.ipify.org').text, 0, 97])
+    windowFunctions.line(2)
 
     #1 Line is 50 Characters wide
-    #printer("MMMMMMMMMMMMMMMMMMMMMMMMFMMMMMMMMMMMMMMMMMMMMMMMMM", 41, 97)
+    #print("MMMMMMMMMMMMMMMMMMMMMMMMFMMMMMMMMMMMMMMMMMMMMMMMMM")
 
-    windowFunctions.main_list("v", "VPN settings", "Connected to HTB")
+    windowFunctions.list("v", "VPN settings", "Connected to HTB")
     print("")
-    windowFunctions.main_list("a", "Applications", "")
+    windowFunctions.list("a", "Applications", "")
     print("")
-    windowFunctions.main_list("s", "Scripts", "")
+    windowFunctions.list("s", "Scripts", "")
     print("")
-    windowFunctions.main_list("c", "Configuration", "")
+    windowFunctions.list("c", "Configuration", "")
     print("")
-    windowFunctions.main_list("e", "Exit HOP3", "")
-    windowFunctions.main_line(2)
+    windowFunctions.list("e", "Exit HOP3", "")
+    windowFunctions.line(2)
 
-    windowFunctions.main_oneside(["What do you want to do?", 41, 97])
+    windowFunctions.normal(["What do you want to do?", 41, 97])
 
     command = input()
     if command == "v":

@@ -1,21 +1,12 @@
 import os
 
-class ANSI():
-    def background(code):
-        return "\33[{code}m".format(code=code)
-  
-    def style(code):
-        return "\33[{code}m".format(code=code)
-  
-    def color(code):
-        return "\33[{code}m".format(code=code)
+def ANSI(code):
+    return "\33[{code}m".format(code=code)
 
-#Printer
-def printer(text, backgroundColor, textColor):
-    print(ANSI.background(backgroundColor) + ANSI.color(textColor) + text + ANSI.background(40) + ANSI.color(97))
+windowWidth = 50
 
 #Clear console
-def clearConsole():
+def clear():
     command = 'clear'
     if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
         command = 'cls'
@@ -23,36 +14,35 @@ def clearConsole():
         command = 'clear'
     os.system(command)
 
-#main-main_oneside
-def main_oneside(left):
-    left[0] = " " + left[0]
-    print (ANSI.background(left[1])+ ANSI.color(left[2]) + left[0] + ANSI.background(0) + ANSI.color(97))
-
-#main-main_twoside
-def main_twoside(left, right):
-    right[0] = right[0] + " "
+#Draw normal text
+def normal(left = None, right = None):
     left[0] = " " + left[0]
 
-    #Calculate Spaces
-    spaces = ""
-    for x in range(50-len(right[0])-len(left[0])):
-      spaces = spaces + " "
-    print (ANSI.background(left[1])+ ANSI.color(left[2]) + left[0] + spaces + right[0] + ANSI.background(0) + ANSI.color(97))
+    if right == None:
+        print (ANSI(left[1])+ ANSI(left[2]) + left[0] + ANSI(0) + ANSI(97))
+    else:
+        right[0] = right[0] + " "
+        spaces = ""
+        for x in range(windowWidth-len(right[0])-len(left[0])):
+          spaces = spaces + " "
+        print (ANSI(left[1])+ ANSI(left[2]) + left[0] + spaces + right[0] + ANSI(0) + ANSI(97))
 
-#main-line
-def main_line(mode):
+#Draw a line across whole width
+def line(mode):
 
-    if mode == 0:    
-        printer("__________________________________________________", 0, 31)
+    lineString = ""
+    for x in range(windowWidth):
+        lineString = lineString + "_"
+
+    if mode == 0:
+        print(ANSI(0) + ANSI(31) + lineString + ANSI(40) + ANSI(97))
     elif mode == 1:
-        print("")
-        printer("__________________________________________________", 0, 31)
+        print(ANSI(0) + ANSI(31) + "\n" + lineString + ANSI(40) + ANSI(97))
     elif mode == 2:
-        printer("__________________________________________________", 0, 31)
-        print("")
+        print(ANSI(0) + ANSI(31) + lineString + "\n" + ANSI(40) + ANSI(97))
 
-#main-list
-def main_list(abbreviation, detail, status):
+#Draw a list with an abbreviation, a detail and a status
+def list(abbreviation, detail, status):
 
     #Correction "abbreviation"
     if len(abbreviation) > 2:
@@ -66,11 +56,11 @@ def main_list(abbreviation, detail, status):
 
     #Indent status
     spaces = ""
-    for x in range(23-lengthAbbrevation-lengthDetail):
+    for x in range((windowWidth // 2 - 2)-lengthAbbrevation-lengthDetail):
       spaces = spaces + " "
 
     #Form strings
-    abbreviation = ANSI.background(41)+ ANSI.color(97) + " " + abbreviation + " "
-    detail = ANSI.background(0)+ ANSI.color(97) + " " + detail + spaces
+    abbreviation = ANSI(41)+ ANSI(97) + " " + abbreviation + " "
+    detail = ANSI(0)+ ANSI(97) + " " + detail + spaces
     
-    print(abbreviation + detail + status + ANSI.background(0) + ANSI.color(97))
+    print(abbreviation + detail + status + ANSI(0) + ANSI(97))
