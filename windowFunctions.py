@@ -14,8 +14,15 @@ def clear():
         command = 'clear'
     os.system(command)
 
+#Draw spacing
 def spacing():
     print("")
+
+#Draw text
+#
+def matrix_text(test):
+    print(test[1][0])
+    
 
 #Draw normal text
 def text(left = None, right = None):

@@ -1,14 +1,52 @@
+#always import
 import os
 import requests
 import subprocess
+import getpass
+import sys
 
+#import dependent on OS
 if os.name in ('nt', 'dos'):
-	from subprocess import CREATE_NEW_CONSOLE
+    from subprocess import CREATE_NEW_CONSOLE
+    import msvcrt
+else:
+    import tty
 
+#import self made modules
 import windowFunctions
 
-def getVPNStatus():
+#https://stackoverflow.com/questions/20831773/how-to-accept-input-without-the-need-to-press-enter-python-3
+def getch():
+    if os.name in ('nt', 'dos'):
+        #Windows
+        try:
+            character = msvcrt.getch().decode("utf-8")
+        except:
+            character = "Error"
+        return character
+    else:
+        #Linux
+        tty.setraw(sys.stdin.fileno())
+        return sys.stdin.read(1)
 
+#WINDOW testbed
+def testbed():
+    windowFunctions.clear()
+
+    character = getch()
+
+    if character == "e":
+        main()
+    elif character == "w":
+        main()
+    elif character == "s":
+        main()
+    else:
+        testbed()
+    
+
+def getVPNStatus():
+    
     if os.name in ('nt', 'dos'):
         return windowFunctions.ANSI(33) + "Not supported"
     else:
@@ -49,7 +87,7 @@ def main():
     windowFunctions.clear()
 
     #Main window top
-    windowFunctions.text(["3P0H0PE 0.0.5", 41, 97], ["by BE3dARt with <3", 41, 97])
+    windowFunctions.text(["3P0H0PE 0.0.6", 41, 97], ["by BE3dARt with <3", 41, 97])
     windowFunctions.spacing()
     # + requests.get('https://api.ipify.org').text
     windowFunctions.text(["Public IPv4: " + windowFunctions.ANSI(32), 0, 97])
@@ -69,15 +107,21 @@ def main():
     windowFunctions.spacing()
     windowFunctions.list("e", "Exit HOP3", "")
 
+    windowFunctions.matrix_text([["VPN", ["On", 0], ["Off", 1]], ["IP Mode", ["IPv4", 1], ["IPv6", 0]]])
+    
     #BOTTOM: What do you want to do?
     windowFunctions.seperator()
     windowFunctions.spacing()
     windowFunctions.text(["What do you want to do?", 41, 97])
     windowFunctions.spacing()
 
+    #silentInput = getpass.getpass(prompt='')
+
     command = input()
     if command == "v":
         vpn()
+    elif command == "t":
+        testbed()
     elif command == "exit" or command == "e":
         quit()
     else:
