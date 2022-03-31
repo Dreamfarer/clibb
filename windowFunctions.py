@@ -19,9 +19,25 @@ def spacing():
     print("")
 
 #Draw text
-#
 def matrix_text(test):
-    print(test[1][0])
+    
+    outerCounter = 0
+    innerCounter = 1
+    while (True):
+        try:
+            print(test[outerCounter][0])
+            
+            while(True):
+                try:
+                    print(test[outerCounter][innerCounter])
+                    innerCounter += 1
+                except:
+                    innerCounter = 1
+                    break
+                finally:
+                    outerCounter += 1
+        except:
+            break;
     
 
 #Draw normal text
