@@ -11,11 +11,11 @@ if os.name in ('nt', 'dos'):
     import msvcrt
 else:
     import tty
+    import termios
 
 #import self made modules
 import windowFunctions
 
-#https://stackoverflow.com/questions/20831773/how-to-accept-input-without-the-need-to-press-enter-python-3
 def getch():
     if os.name in ('nt', 'dos'):
         #Windows
@@ -26,8 +26,14 @@ def getch():
         return character
     else:
         #Linux
-        tty.setraw(sys.stdin.fileno())
-        return sys.stdin.read(1)
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            character = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return character
 
 #WINDOW testbed
 def testbed():
