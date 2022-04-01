@@ -5,6 +5,8 @@ def ANSI(code):
 
 windowWidth = 50
 
+#Word string is always: ["Word", font-color, background-color]
+
 #Clear console
 def clear():
     command = 'clear'
@@ -18,24 +20,52 @@ def clear():
 def spacing():
     print("")
 
+#Center given word and put space around it to make it given length
+def center(word, length):
+    space = length - len(word[0])
+    
+    spaceB = ""
+    for x in range(space // 2):
+        spaceB = spaceB + " "
+
+    spaceE = ""
+    for x in range(space - (space // 2)):
+        spaceE = spaceE + " "
+    
+    return ANSI(word[1]) + ANSI(word[2]) + spaceB + word[0] + spaceE  + ANSI(0) + ANSI(97)
+    
+
 #Draw text
 def matrix_text(test):
-    
+
     outerCounter = 0
-    innerCounter = 1
+    innerCounter = 2
     while (True):
         try:
-            print(test[outerCounter][0])
+            outString = test[outerCounter][1]
+            
+            #Now find how much space needs to be added
+            spaces = ""
+            for x in range(15-len(outString)):
+              spaces = spaces + " "
+              
+            outString = outString + spaces
             
             while(True):
                 try:
-                    print(test[outerCounter][innerCounter])
+                    if test[outerCounter][innerCounter][1] == 1:
+                        outString = outString + center([str(test[outerCounter][innerCounter][0]), 97, 41], 8) + ANSI(0) + ANSI(97) + " "
+                    else:
+                        outString = outString + center([str(test[outerCounter][innerCounter][0]), 97, 0], 8) + ANSI(0) + ANSI(97) + " "
+                    
                     innerCounter += 1
                 except:
-                    innerCounter = 1
+                    innerCounter = 2
                     break
-                finally:
-                    outerCounter += 1
+
+            #Complete string and print it   
+            print (outString)
+            outerCounter += 1
         except:
             break;
     

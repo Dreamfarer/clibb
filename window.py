@@ -113,7 +113,7 @@ def main():
     windowFunctions.spacing()
     windowFunctions.list("e", "Exit HOP3", "")
 
-    windowFunctions.matrix_text([["VPN", ["On", 0], ["Off", 1]], ["IP Mode", ["IPv4", 1], ["IPv6", 0]]])
+    windowFunctions.matrix_text([[1, "VPN", ["On", 0], ["Off", 1], ["Lol", 0]], [1, "IP Mode",["IPv4", 1], ["IPv6", 0]]])
     
     #BOTTOM: What do you want to do?
     windowFunctions.seperator()
