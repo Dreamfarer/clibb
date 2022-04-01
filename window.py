@@ -1,55 +1,9 @@
 #always import
 import os
 import requests
-import subprocess
-import getpass
-import sys
-
-#import dependent on OS
-if os.name in ('nt', 'dos'):
-    from subprocess import CREATE_NEW_CONSOLE
-    import msvcrt
-else:
-    import tty
-    import termios
 
 #import self made modules
 import windowFunctions
-
-def getch():
-    if os.name in ('nt', 'dos'):
-        #Windows
-        try:
-            character = msvcrt.getch().decode("utf-8")
-        except:
-            character = "Error"
-        return character
-    else:
-        #Linux
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(fd)
-            character = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return character
-
-#WINDOW testbed
-def testbed():
-    windowFunctions.clear()
-
-    character = getch()
-
-    if character == "e":
-        main()
-    elif character == "w":
-        main()
-    elif character == "s":
-        main()
-    else:
-        testbed()
-    
 
 def getVPNStatus():
     
@@ -62,8 +16,33 @@ def getVPNStatus():
             return windowFunctions.ANSI(32) + "Connected"
         except:
             return windowFunctions.ANSI(31) + "Diconnected"
+
+#WINDOW window_testbed
+def window_testbed():
     
-def vpn():
+    print('\033[?25l', end="")
+    windowFunctions.temporary = [[1, "VPN", ["On", 0], ["Off", 1], ["Lol", 0]], [0, "IP Mode",["IPv4", 1], ["IPv6", 0]], [0, "Opt", ["Yes", 0], ["No", 1], ["May", 0]]]
+    
+    while (True):
+        windowFunctions.clear()
+        
+        windowFunctions.matrix_text(windowFunctions.temporary )
+        
+        character = windowFunctions.getch()
+        if character == "e":
+            print('\033[?25h', end="")
+            window_main()
+            break
+        elif character == "d":
+            windowFunctions.change(1)
+        elif character == "a":
+            windowFunctions.change(0)
+        elif character == "s":
+            windowFunctions.change(3)
+        elif character == "w":
+            windowFunctions.change(2)
+    
+def window_vpn():
     windowFunctions.clear()
     
     windowFunctions.list("d", "Disconnect", "")
@@ -81,19 +60,19 @@ def vpn():
         try:
             stdout = subprocess.run(["sudo", "killall", "openvpn"], check=True, capture_output=True, text=True).stdout
         except:
-            main()
-        main()
+            window_main()
+        window_main()
     elif command == "exit" or command == "e":
-        main()
+        window_main()
     else:
-       vpn()
+       window_vpn()
 
 #WINDOW main
-def main():
+def window_main():
     windowFunctions.clear()
-
+    
     #Main window top
-    windowFunctions.text(["3P0H0PE 0.0.6", 41, 97], ["by BE3dARt with <3", 41, 97])
+    windowFunctions.text(["3P0H0PE 0.1.0", 41, 97], ["by BE3dARt with <3", 41, 97])
     windowFunctions.spacing()
     # + requests.get('https://api.ipify.org').text
     windowFunctions.text(["Public IPv4: " + windowFunctions.ANSI(32), 0, 97])
@@ -112,8 +91,6 @@ def main():
     windowFunctions.list("c", "Configuration", "")
     windowFunctions.spacing()
     windowFunctions.list("e", "Exit HOP3", "")
-
-    windowFunctions.matrix_text([[1, "VPN", ["On", 0], ["Off", 1], ["Lol", 0]], [1, "IP Mode",["IPv4", 1], ["IPv6", 0]]])
     
     #BOTTOM: What do you want to do?
     windowFunctions.seperator()
@@ -121,19 +98,17 @@ def main():
     windowFunctions.text(["What do you want to do?", 41, 97])
     windowFunctions.spacing()
 
-    #silentInput = getpass.getpass(prompt='')
-
-    command = input()
+    command = windowFunctions.getch()
     if command == "v":
-        vpn()
-    elif command == "t":
-        testbed()
+        window_vpn()
+    elif command == "c":
+        window_testbed()
     elif command == "exit" or command == "e":
         quit()
     else:
-        main()
+        window_main()
    
-main()
+window_main()
 
 #https://i.stack.imgur.com/9UVnC.png
 #print("MMMMMMMMMMMMMMMMMMMMMMMMFMMMMMMMMMMMMMMMMMMMMMMMMM")
