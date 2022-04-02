@@ -1,0 +1,27 @@
+{
+    Configuration,
+    {v, On , Off, lol}
+    {IP Mode, IPv4, IPv6}
+    {Opt, Yes, No, May}
+}
+
+{
+    Configuration,
+    {v, On , Off, lol}
+    {IP Mode, IPv4, IPv6}
+    {Opt, Yes, No, May}
+}
+
+Different types:
+* Two-Side: One string on the left and one string on the right
+* One-Side: One string on the left
+
+* Display: One string on the left followed by a variable
+
+* Menu: Short abbreviation on the left followed by a string
+* Menu-Display: Same as Menu but followed by variable 
+
+* Configuration: One string on the left followed by a navigatable menu
+
+* Seperator-Filled: Draw a line through the whole width
+* Seperator-Empty: Create an empty line

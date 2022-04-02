@@ -37,6 +37,33 @@ def getch():
 
 #Word string is always: ["Word", font-color, background-color]
 
+def accept():
+
+    outerCounter =0
+    innerCounter = 2
+    
+    while(True):
+        try:
+            #Find the active element
+            if temporary[outerCounter][0] != 0:
+                
+                #Make every other element to off first
+                while(True):
+                    try:
+                        temporary[outerCounter][innerCounter][1] = 0
+                    except:
+                        break
+                    else:
+                        innerCounter += 1
+                
+                #Make the active element on
+                temporary[outerCounter][temporary[outerCounter][0] + 1][1] = 1
+            
+        except:
+            break
+        outerCounter += 1    
+
+
 def change_matchColumn(counter, add):
 
     index = 0
