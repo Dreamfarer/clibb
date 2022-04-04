@@ -1,16 +1,47 @@
+COLOR ANSI
 {
-    Configuration,
-    {v, On , Off, lol}
-    {IP Mode, IPv4, IPv6}
-    {Opt, Yes, No, May}
-}
+    120, //text
+    50, //Background Accent
+    1, //OK
+    2, //Alert
+    3, //Fail
+}!
 
+WINDOWS
 {
-    Configuration,
-    {v, On , Off, lol}
-    {IP Mode, IPv4, IPv6}
-    {Opt, Yes, No, May}
-}
+    window_configuration,
+    {
+        Two-Side {"3P0H0PE 0.1.1", "by BE3dARt with <3"},
+        Configuration {
+            {v, On , Off, lol},
+            {IP Mode, IPv4, IPv6},
+            {Opt, Yes, No, May}
+        },
+        Seperator-Empty,
+        One-Side {"What do you want to do?"}
+    }
+},
+{
+    window_main
+    {
+        Two-Side {"3P0H0PE 0.1.1", "by BE3dARt with <3"},
+        Seperator-Empty,
+        Display {"Public IPv4: ", VAR1},
+        Seperator-Filled,
+        Menu-Display {"v", "VPN Settings", VAR2},
+        Seperator-Empty,
+        Menu-Display {"a", "Applications", VAR3},
+        Seperator-Empty,
+        Menu-Display {"s", "Scripts", VAR4},
+        Seperator-Empty,
+        Menu-Display {"c", "Configuration", VAR5},
+        Seperator-Empty,
+        Menu-Display {"c", "Exit 3P0H0PE", VAR5},
+        Seperator-Filled,
+        Seperator-Empty,
+        One-Side {"What do you want to do?"}
+    }
+}!
 
 Different types:
 * Two-Side: One string on the left and one string on the right
