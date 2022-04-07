@@ -2,15 +2,19 @@
 import os
 
 content = open("configuration.b3d").read()
-data = [""]
 
 levelCounter = 0
 mainCounter = 0
 
 colors = []
-temporary = ""
-temp2 = ["", ""]
-inhalt = []
+
+#Top array containing all data
+windowContents = []
+
+#Inner string that holds type and content for one line until it gets formated and eventually passed to the top array
+windowContentsOneLine = ["", ""] 
+
+tempStringColors = ""
 
 for x in range(len(content)):
 
@@ -31,43 +35,49 @@ for x in range(len(content)):
         if content[x] != " " and content[x] != "\n":
             
             if content[x] != ",":
-                temporary += content[x]
+                tempStringColors += content[x]
             else:
-                colors.append(temporary)
-                temporary = ""
+                colors.append(tempStringColors)
+                tempStringColors = ""
 
     #Capture configuration window
     if mainCounter == 3 and levelCounter == 2:
         if content[x] != " " and content[x] != "\n":
             
+            #Line does always end with ",". Proceed to format and store this line 
             if content[x] == ",":
-                inhalt.append(temp2[0])
-                inhalt.append(temp2[1])
-
-                testus = [temp2[0], temp2[1]]
                 
-                temp2[0] = ""
-                temp2[1] = ""
-
-                if testus[0] == "Two-Side":
-                    array = [""]
-                    counter = 0
-                    for i in range(len(temp2[1]))
-                        if 
-
-
-
-
-                #print (testus[1])
-
-
                 
+                #Temporary variables until passed to top array
+                tempContents = [""]
+                tempContentsString = ""
+                
+                #Dependent on which type is wanted, format the string differently
+                if windowContentsOneLine[0] == "Two-Side" or windowContentsOneLine[0] == "One-Side" or windowContentsOneLine[0] == "Display" or windowContentsOneLine[0] == "Menu" or windowContentsOneLine[0] == "Menu-Display":
+                    for i in range(len(windowContentsOneLine[1]))
+                        if windowContentsOneLine[1][i] == ",":
+                            tempContents.append(tempContentsString)
+                            tempContentsString = ""
+                        else:
+                            tempContentsString += windowContentsOneLine[1][i]
+                            
+                if windowContentsOneLine[0] == "Configuration":
+                    print("Not Ready! LOL")
+                
+                if tempContents == [""]:
+                    windowContents.append(windowContentsOneLine[0])
+                else:
+                    windowContents.append([windowContentsOneLine[0], tempContents])
+                
+                windowContentsOneLine[0] = ""
+                windowContentsOneLine[1] = ""
+
             else:
-                temp2[0] += content[x]
+                windowContentsOneLine[0] += content[x]
             
-    if mainCounter == 3 and levelCounter == 3:
-        temp2[1] += content[x]
+    if mainCounter == 3 and levelCounter >= 3:
+        windowContentsOneLine[1] += content[x]
 
 
-#print (inhalt)
+#print (windowContents)
 input()

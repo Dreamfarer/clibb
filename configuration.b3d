@@ -13,9 +13,9 @@ WINDOWS
     {
         Two-Side {"3P0H0PE 0.1.1", "by BE3dARt with <3"},
         Configuration {
-            {v, On , Off, lol},
-            {IP Mode, IPv4, IPv6},
-            {Opt, Yes, No, May}
+            {1, "VPN", ["On", 0], ["Off", 1], ["Lol", 0]}, 
+            {0, "IP Mode",["IPv4", 1], ["IPv6", 0]}, 
+            {0, "Opt", ["Yes", 0], ["No", 1], ["May", 0]}
         },
         Seperator-Empty,
         One-Side {"What do you want to do?"}
@@ -44,15 +44,15 @@ WINDOWS
 }!
 
 Different types:
-* Two-Side: One string on the left and one string on the right
-* One-Side: One string on the left
+X Two-Side: One string on the left and one string on the right
+X One-Side: One string on the left
 
-* Display: One string on the left followed by a variable
+X Display: One string on the left followed by a variable
 
-* Menu: Short abbreviation on the left followed by a string
-* Menu-Display: Same as Menu but followed by variable 
+X Menu: Short abbreviation on the left followed by a string
+X Menu-Display: Same as Menu but followed by variable 
 
-* Configuration: One string on the left followed by a navigatable menu
+X Configuration: One string on the left followed by a navigatable menu
 
 * Seperator-Filled: Draw a line through the whole width
 * Seperator-Empty: Create an empty line
