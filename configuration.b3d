@@ -1,10 +1,10 @@
-COLOR ANSI
+COLORS
 {
-    120, //text
-    50, //Background Accent
-    1, //OK
-    2, //Alert
-    3, //Fail
+    120,
+    50,
+    1,
+    2,
+    3
 }!
 
 WINDOWS
