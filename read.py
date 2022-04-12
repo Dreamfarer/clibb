@@ -16,6 +16,93 @@ windowContentsOneLine = ["", ""]
 
 tempStringColors = ""
 
+def captureArray(passedContent):
+
+    #Temporary variables until passed to top array
+    tempContents = []
+    tempContentsString = ""
+
+    rowStart = False
+
+    for i in range(len(passedContent)):
+
+        if rowStart == False and (passedContent[i] != " " and passedContent[i] != "\n"):
+            rowStart = True
+
+        #Process row if it has ended
+        if passedContent[i] == "\n" and (passedContent[i-1] == "," or passedContent[i-1] == "]"):
+
+            tempInnerContents = []
+            tempInnerContentsString = ""
+            tempInnerLevelCounter = 0
+            
+            for a in range(len(tempContentsString)):
+
+                if tempContentsString[a] == "," and tempInnerLevelCounter == 0:
+                    if tempContentsString[a-1] != "]":
+                        if tempInnerContentsString[0] == " ":
+                            tempInnerContentsString = tempInnerContentsString[1:]
+                        tempInnerContents.append(tempInnerContentsString)
+                    tempInnerContentsString = ""
+                elif tempContentsString[a] == "]" and tempInnerLevelCounter == 1:
+                    
+                    tempInnerLevelCounter -= 1
+                    tempInnerInnerContents = []
+                    tempInnerInnerContentsString = ""
+                    
+                    for b in range(len(tempInnerContentsString)):
+                        if tempInnerContentsString[b] == ",":
+                            if tempInnerInnerContentsString[0] == " ":
+                                    tempInnerInnerContentsString = tempInnerInnerContentsString[1:]
+                            tempInnerInnerContents.append(tempInnerInnerContentsString)
+                            tempInnerInnerContentsString = ""
+                        else:
+                            tempInnerInnerContentsString += tempInnerContentsString[b]
+                            if b == len(tempInnerContentsString)-1:
+                                if tempInnerInnerContentsString[0] == " ":
+                                    tempInnerInnerContentsString = tempInnerInnerContentsString[1:]
+                                tempInnerInnerContents.append(tempInnerInnerContentsString)
+
+                    tempInnerContents.append(tempInnerInnerContents)
+                    
+                elif tempContentsString[a] == "[":
+                    tempInnerLevelCounter += 1
+                else:
+                    tempInnerContentsString += tempContentsString[a]
+
+            tempContents.append(tempInnerContents)
+
+            #Reset variables
+            tempInnerContents = []
+            tempInnerContentsString = ""
+            tempContentsString = ""
+            rowStart = False
+
+        if rowStart == True:
+            tempContentsString += passedContent[i]
+
+    return tempContents
+
+def captureText(passedContent):
+
+    #Temporary variables until passed to top array
+    tempContents = []
+    tempContentsString = ""
+    
+    for i in range(len(passedContent)):
+        #If there is a seperator (","), split the string and append it to the array
+        if passedContent[i] == ",":
+            tempContents.append(tempContentsString)
+            tempContentsString = ""
+        else:
+            #Delete the space after a seperator (","), eg. "Test, ABC" -> "Test,ABC"
+            if passedContent[i-1] != ",":
+                tempContentsString += passedContent[i]
+            #Append to array if line is finished
+            if i == len(passedContent)-1:
+                tempContents.append(tempContentsString)
+    return tempContents
+
 for x in range(len(content)):
 
     if content[x] == "{":
@@ -44,7 +131,7 @@ for x in range(len(content)):
     if mainCounter >= 2 and levelCounter == 2:
         if content[x] != " " and content[x] != "\n":
             
-            #Line does always end with ",". Proceed to format and store this line 
+            #If line has ended (With separator ","), process it. 
             if content[x] == ",":
                 
                 #Temporary variables until passed to top array
@@ -53,34 +140,17 @@ for x in range(len(content)):
                 
                 #Dependent on which type is wanted, format the string differently
                 if windowContentsOneLine[0] == "Two-Side" or windowContentsOneLine[0] == "One-Side" or windowContentsOneLine[0] == "Display" or windowContentsOneLine[0] == "Menu" or windowContentsOneLine[0] == "Menu-Display":
-                    for i in range(len(windowContentsOneLine[1])):
-
-                        #If there is a seperator (","), split the string and append it to the array
-                        if windowContentsOneLine[1][i] == ",":
-                            tempContents.append(tempContentsString)
-                            tempContentsString = ""
-                        else:
-                            #Delete the space after a seperator (","), eg. "Test, ABC" -> "Test,ABC"
-                            if windowContentsOneLine[1][i-1] != ",":
-                                tempContentsString += windowContentsOneLine[1][i]
-                            #Append to array if line is finished
-                            if i == len(windowContentsOneLine[1])-1:
-                                tempContents.append(tempContentsString)
-                            
+                    tempContents = captureText(windowContentsOneLine[1])        
                 if windowContentsOneLine[0] == "Configuration":
-                    fakeLevelCounter = 0
-                    for i in range(len(windowContentsOneLine[1])):
+                    tempContents = captureArray(windowContentsOneLine[1])
 
-                        #Activate if a row has ended
-                        if windowContentsOneLine[1][i] == "\n" and (windowContentsOneLine[1][i-1] == "," or windowContentsOneLine[1][i-1] == "]"):
-                            print (windowContentsOneLine[1])
-                            print ("YESYES")
-
+                #Add another dimension to array only if necessary
                 if tempContents == []:
                     windowContents.append(windowContentsOneLine[0])
                 else:
                     windowContents.append([windowContentsOneLine[0], tempContents])
-                
+
+                #Reset variables to use in next line
                 windowContentsOneLine[0] = ""
                 windowContentsOneLine[1] = ""
 

@@ -74,7 +74,7 @@ def window_main():
     windowFunctions.clear()
     
     #Main window top
-    windowFunctions.text(["3P0H0PE 0.1.1", 41, 97], ["by BE3dARt with <3", 41, 97])
+    windowFunctions.text(["3P0H0PE 0.1.2", 41, 97], ["by BE3dARt with <3", 41, 97])
     windowFunctions.spacing()
     # + requests.get('https://api.ipify.org').text
     windowFunctions.text(["Public IPv4: " + windowFunctions.ANSI(32), 0, 97])
