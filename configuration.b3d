@@ -4,8 +4,8 @@ COLORS
     50,
     1,
     2,
-    3
-}!
+    3,
+}
 
 WINDOWS
 {
@@ -15,14 +15,14 @@ WINDOWS
         Configuration {
             {1, VPN, [On, 0], [Off, 1], [Lol, 0]},
             {0, IP Mode,[IPv4, 1], [IPv6, 0]},
-            {0, Opt, [Yes, 0], [No, 1], [May, 0]}
+            {0, Opt, [Yes, 0], [No, 1], [May, 0]},
         },
         Seperator-Empty,
-        One-Side {What do you want to do?}
-    }
+        One-Side {What do you want to do?},
+    },
 },
 {
-    window_main
+    window_main,
     {
         Two-Side {3P0H0PE 0.1.1, by BE3dARt with <3},
         Seperator-Empty,
@@ -39,9 +39,9 @@ WINDOWS
         Menu-Display {c, Exit 3P0H0PE, VAR5},
         Seperator-Filled,
         Seperator-Empty,
-        One-Side {What do you want to do?}
-    }
-}!
+        One-Side {What do you want to do?},
+    },
+},
 
 Different types:
 X Two-Side: One string on the left and one string on the right
