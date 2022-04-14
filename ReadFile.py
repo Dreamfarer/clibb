@@ -88,7 +88,7 @@ def captureText(passedContent):
                 tempContents.append(tempContentsString)
     return tempContents
 
-def readConfiguration(filename):
+def configuration(filename):
 
     #Counters
     levelCounter = 0
@@ -169,6 +169,3 @@ def readConfiguration(filename):
             singleWindowOneEntry[1] += content[fileIndex]
 
     return windows
-
-print (readConfiguration("configuration.b3d"))
-input()

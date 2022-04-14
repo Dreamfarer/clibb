@@ -17,6 +17,18 @@ def getVPNStatus():
         except:
             return windowFunctions.ANSI(31) + "Diconnected"
 
+#WINDOW window_arrayTest
+def window_arrayTest():
+    windowFunctions.clear()
+
+    windowFunctions.window("window_configuration")
+
+    command = windowFunctions.getch()
+    if command == "exit" or command == "e":
+        window_main()
+    else:
+       window_arrayTest()
+
 #WINDOW window_testbed
 def window_testbed():
     
@@ -58,7 +70,6 @@ def window_vpn():
 
     command = input()
     if command == "d":
-        
         try:
             stdout = subprocess.run(["sudo", "killall", "openvpn"], check=True, capture_output=True, text=True).stdout
         except:
@@ -105,11 +116,13 @@ def window_main():
         window_vpn()
     elif command == "c":
         window_testbed()
+    elif command == "a":
+        window_arrayTest()
     elif command == "exit" or command == "e":
         quit()
     else:
         window_main()
-   
+
 window_main()
 
 #https://i.stack.imgur.com/9UVnC.png

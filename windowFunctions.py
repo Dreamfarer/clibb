@@ -1,6 +1,8 @@
 import os
 import sys
 
+import ReadFile
+
 global temporary
 
 #import dependent on OS
@@ -15,6 +17,43 @@ def ANSI(code):
     return "\33[{code}m".format(code=code)
 
 windowWidth = 50
+
+#Translate name to array index and insert it
+def window(name):
+    nameCounter = 1
+    while (True):
+        try:
+            if configuration[nameCounter][0] == name:
+                break
+            else:
+                nameCounter += 1
+        except:
+            print ("Nothing found! Please check spelling!")
+            return
+
+    moduleCounter = 0
+    while (True):
+        try:
+            if configuration[nameCounter][1][moduleCounter][0] == "Two-Side":
+                twoSide(configuration[nameCounter][1][moduleCounter][1])
+            if configuration[nameCounter][1][moduleCounter][0] == "One-Side":
+                oneSide(configuration[nameCounter][1][moduleCounter][1][0])
+            if configuration[nameCounter][1][moduleCounter][0] == "Display":
+                print ("Dis")
+            if configuration[nameCounter][1][moduleCounter][0] == "Menu":
+                print ("Menu")
+            if configuration[nameCounter][1][moduleCounter][0] == "Menu-Display":
+                menuDisplay(configuration[nameCounter][1][moduleCounter][1])
+            if configuration[nameCounter][1][moduleCounter][0] == "Configuration":
+                print ("Configurat")
+            if len(configuration[nameCounter][1][moduleCounter][0]) == 1:
+                if configuration[nameCounter][1][moduleCounter] == "Seperator-Filled":
+                    seperator()
+                if configuration[nameCounter][1][moduleCounter] == "Seperator-Empty":
+                    spacing()
+            moduleCounter += 1
+        except:
+            return
 
 def getch():
     if os.name in ('nt', 'dos'):
@@ -209,8 +248,21 @@ def matrix_text(test):
             outerCounter += 1
         except:
             break;
-    
 
+def oneSide(content):
+    content = " " + content + " "
+    print (ANSI(configuration[0][0]) + ANSI(configuration[0][1]) + content + ANSI(0) + ANSI(configuration[0][0]))
+    
+def twoSide(content):
+    content[0] = " " + content[0]
+    content[1] = content[1] + " "
+
+    spaces = ""
+    for x in range(windowWidth-len(content[1])-len(content[0])):
+        spaces = spaces + " "
+
+    print (ANSI(configuration[0][0]) + ANSI(configuration[0][1]) + content[0] + spaces + content[1] + ANSI(0) + ANSI(configuration[0][0]))
+    
 #Draw normal text
 def text(left = None, right = None):
     left[0] = " " + left[0]
@@ -231,7 +283,32 @@ def seperator():
     for x in range(windowWidth):
         lineString = lineString + "_"
 
-    print(ANSI(0) + ANSI(31) + lineString + ANSI(40) + ANSI(97))
+    print(ANSI(int(configuration[0][1])-10) + lineString + ANSI(0) + ANSI(configuration[0][0]))
+
+def menuDisplay(content):
+    
+    #Correct "abbreviation"
+    if len(content[0]) > 2:
+        content[0] == "xx"
+    elif len(content[0]) == 1:
+        content[0] = content[0] + " "
+
+    #Find string lengths
+    lengthDetail = len(content[1])
+    lengthAbbrevation = len(content[0]) + 2
+
+    #Indent variable
+    spaces = ""
+    for x in range((windowWidth // 2 - 2)-lengthAbbrevation-lengthDetail):
+      spaces = spaces + " "
+
+    #Form strings
+    content[0] = ANSI(configuration[0][0])+ ANSI(configuration[0][1]) + " " + content[0] + " "
+    content[1] = ANSI(0)+ ANSI(configuration[0][0]) + " " + content[1] + spaces
+
+    #NEED TO CALCULATE VARIABLE
+    
+    print(content[0] + content[1] + content[2] + ANSI(0) + ANSI(configuration[0][0]))
 
 #Draw a list with an abbreviation, a detail and a status
 def list(abbreviation, detail, status):
@@ -256,3 +333,12 @@ def list(abbreviation, detail, status):
     detail = ANSI(0)+ ANSI(97) + " " + detail + spaces
     
     print(abbreviation + detail + status + ANSI(0) + ANSI(97))
+
+configuration = ReadFile.configuration("configuration.b3d")
+
+#COLORS
+#Text-Color         configuration[0][0]
+#Background-Color   configuration[0][1]
+#OK                 configuration[0][2]
+#Fail               configuration[0][3]
+#Alert              configuration[0][4]
