@@ -39,25 +39,28 @@ def window(name):
     
     while (True):
         try:
-            if configuration[nameCounter][1][moduleCounter][0] == "Two-Side":
-                twoSide(configuration[nameCounter][1][moduleCounter][1])
-            if configuration[nameCounter][1][moduleCounter][0] == "One-Side":
-                oneSide(configuration[nameCounter][1][moduleCounter][1][0])
-            if configuration[nameCounter][1][moduleCounter][0] == "Display":
-                print ("Display")
-            if configuration[nameCounter][1][moduleCounter][0] == "Menu":
-                print ("Menu")
-            if configuration[nameCounter][1][moduleCounter][0] == "Menu-Display":
-                menuDisplay(configuration[nameCounter][1][moduleCounter][1])
-            if configuration[nameCounter][1][moduleCounter][0] == "Configuration":
-                global currentConfiguration
-                currentConfiguration = moduleCounter
-                matrix_text(configuration[nameCounter][1][moduleCounter][1])
             if len(configuration[nameCounter][1][moduleCounter][0]) == 1:
-                if configuration[nameCounter][1][moduleCounter] == "Seperator-Filled":
-                    seperator()
-                if configuration[nameCounter][1][moduleCounter] == "Seperator-Empty":
-                    spacing()
+                match configuration[nameCounter][1][moduleCounter]:
+                    case "Seperator-Filled":
+                        seperator()
+                    case "Seperator-Empty":
+                        spacing()
+            else:
+                match configuration[nameCounter][1][moduleCounter][0]:
+                    case "Two-Side":
+                        twoSide(configuration[nameCounter][1][moduleCounter][1])
+                    case "One-Side":
+                        oneSide(configuration[nameCounter][1][moduleCounter][1][0])
+                    case "Display":
+                        display(configuration[nameCounter][1][moduleCounter][1])
+                    case "Menu":
+                        menu(configuration[nameCounter][1][moduleCounter][1])
+                    case "Menu-Display":
+                        menuDisplay(configuration[nameCounter][1][moduleCounter][1])
+                    case "Configuration":
+                        global currentConfiguration
+                        currentConfiguration = moduleCounter
+                        matrix_text(configuration[nameCounter][1][moduleCounter][1])
             moduleCounter += 1
         except:
             return
@@ -80,8 +83,6 @@ def getch():
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return character
-
-#Word string is always: ["Word", font-color, background-color]
 
 def accept():
 
@@ -111,9 +112,9 @@ def accept():
 
 
 def change_matchColumn(counter, add):
-
+    
     index = 0
-
+    
     try:
         configuration[nameCounter][1][currentConfiguration][1][counter + add][configuration[nameCounter][1][currentConfiguration][1][counter][0] + 1] == None
     except:
@@ -127,8 +128,6 @@ def change_matchColumn(counter, add):
                 break
     else:
         configuration[nameCounter][1][currentConfiguration][1][counter + add][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0]
-    
-    
     configuration[nameCounter][1][currentConfiguration][1][counter][0] = 0
         
 def change(direction):
@@ -249,11 +248,23 @@ def matrix_text(test):
                     break
 
             #Complete string and print it
-            outString = "\n" + outString
+            if outerCounter != 0:
+                outString = "\n" + outString
             print (outString)
             outerCounter += 1
         except:
             break;
+
+#NEW 
+def display(inputContent):
+    content = [" " + inputContent[0], inputContent[1]]
+    
+    #Indent variable
+    spaces = ""
+    for x in range((windowWidth // 2 - 2)-len(inputContent[0])):
+      spaces = spaces + " "
+
+    print (content[0] + spaces + content[1] + ANSI(0) + ANSI(configuration[0][0]))
 
 #NEW 
 def oneSide(inputContent):
@@ -296,6 +307,23 @@ def seperator():
         lineString = lineString + "_"
 
     print(ANSI(int(configuration[0][1])-10) + lineString + ANSI(0) + ANSI(configuration[0][0]))
+
+#NEW
+def menu(inputContent):
+    #Pass into new list because we don't want to alter the original
+    content = [inputContent[0], inputContent[1]]
+
+    #Correct "abbreviation"
+    if len(content[0]) > 2:
+        content[0] == "xx"
+    elif len(content[0]) == 1:
+        content[0] = content[0] + " "
+
+    #Form string and print it
+    content[0] = ANSI(configuration[0][0])+ ANSI(configuration[0][1]) + " " + content[0] + " "
+    content[1] = ANSI(0)+ ANSI(configuration[0][0]) + " " + content[1]
+    print(content[0] + content[1] + ANSI(0) + ANSI(configuration[0][0]))
+
 
 #NEW
 def menuDisplay(inputContent):
