@@ -27,7 +27,12 @@ def captureArray(passedContent):
                     if tempContentsString[a-1] != "]":
                         if tempInnerContentsString[0] == " ":
                             tempInnerContentsString = tempInnerContentsString[1:]
-                        tempInnerContents.append(tempInnerContentsString)
+                        try:
+                            tempInnerContentsString = int(tempInnerContentsString)
+                        except:
+                            tempInnerContents.append(tempInnerContentsString)
+                        else:
+                            tempInnerContents.append(tempInnerContentsString)
                     tempInnerContentsString = ""
                 elif tempContentsString[a] == "]" and tempInnerLevelCounter == 1:
                     
@@ -45,7 +50,7 @@ def captureArray(passedContent):
                             tempInnerInnerContentsString += tempInnerContentsString[b]
                             if b == len(tempInnerContentsString)-1:
                                 if tempInnerInnerContentsString[0] == " ":
-                                    tempInnerInnerContentsString = tempInnerInnerContentsString[1:]
+                                    tempInnerInnerContentsString = int(tempInnerInnerContentsString[1:])
                                 tempInnerInnerContents.append(tempInnerInnerContentsString)
 
                     tempInnerContents.append(tempInnerInnerContents)

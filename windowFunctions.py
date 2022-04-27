@@ -3,7 +3,9 @@ import sys
 
 import ReadFile
 
-global temporary
+global nameCounter
+global moduleCounter
+global currentConfiguration
 
 #import dependent on OS
 if os.name in ('nt', 'dos'):
@@ -20,6 +22,7 @@ windowWidth = 50
 
 #Translate name to array index and insert it
 def window(name):
+    global nameCounter
     nameCounter = 1
     while (True):
         try:
@@ -31,7 +34,9 @@ def window(name):
             print ("Nothing found! Please check spelling!")
             return
 
+    global moduleCounter
     moduleCounter = 0
+    
     while (True):
         try:
             if configuration[nameCounter][1][moduleCounter][0] == "Two-Side":
@@ -39,13 +44,15 @@ def window(name):
             if configuration[nameCounter][1][moduleCounter][0] == "One-Side":
                 oneSide(configuration[nameCounter][1][moduleCounter][1][0])
             if configuration[nameCounter][1][moduleCounter][0] == "Display":
-                print ("Dis")
+                print ("Display")
             if configuration[nameCounter][1][moduleCounter][0] == "Menu":
                 print ("Menu")
             if configuration[nameCounter][1][moduleCounter][0] == "Menu-Display":
                 menuDisplay(configuration[nameCounter][1][moduleCounter][1])
             if configuration[nameCounter][1][moduleCounter][0] == "Configuration":
-                print ("Configurat")
+                global currentConfiguration
+                currentConfiguration = moduleCounter
+                matrix_text(configuration[nameCounter][1][moduleCounter][1])
             if len(configuration[nameCounter][1][moduleCounter][0]) == 1:
                 if configuration[nameCounter][1][moduleCounter] == "Seperator-Filled":
                     seperator()
@@ -84,19 +91,19 @@ def accept():
     while(True):
         try:
             #Find the active element
-            if temporary[outerCounter][0] != 0:
+            if configuration[nameCounter][1][currentConfiguration][1][outerCounter][0] != 0:
                 
                 #Make every other element to off first
                 while(True):
                     try:
-                        temporary[outerCounter][innerCounter][1] = 0
+                        configuration[nameCounter][1][currentConfiguration][1][outerCounter][innerCounter][1] = 0
                     except:
                         break
                     else:
                         innerCounter += 1
                 
                 #Make the active element on
-                temporary[outerCounter][temporary[outerCounter][0] + 1][1] = 1
+                configuration[nameCounter][1][currentConfiguration][1][outerCounter][configuration[nameCounter][1][currentConfiguration][1][outerCounter][0] + 1][1] = 1
             
         except:
             break
@@ -108,21 +115,21 @@ def change_matchColumn(counter, add):
     index = 0
 
     try:
-        temporary[counter + add][temporary[counter][0] + 1] == None
+        configuration[nameCounter][1][currentConfiguration][1][counter + add][configuration[nameCounter][1][currentConfiguration][1][counter][0] + 1] == None
     except:
         while(True):
             try:
-                temporary[counter + add][temporary[counter][0] - index] == None
+                configuration[nameCounter][1][currentConfiguration][1][counter + add][configuration[nameCounter][1][currentConfiguration][1][counter][0] - index] == None
             except:
                 index += 1
             else:
-                temporary[counter + add][0] = temporary[counter][0] - (index + 1)
+                configuration[nameCounter][1][currentConfiguration][1][counter + add][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0] - (index + 1)
                 break
     else:
-        temporary[counter + add][0] = temporary[counter][0]
+        configuration[nameCounter][1][currentConfiguration][1][counter + add][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0]
     
     
-    temporary[counter][0] = 0
+    configuration[nameCounter][1][currentConfiguration][1][counter][0] = 0
         
 def change(direction):
 
@@ -133,31 +140,30 @@ def change(direction):
     while(True):
         try:
             #Find the active element
-            if temporary[counter][0] != 0:
-                
+            if configuration[nameCounter][1][currentConfiguration][1][counter][0] != 0:
                 #Move Left
                 if direction == 0:
-                    if temporary[counter][0] == 1:
-                        temporary[counter][0] = 1
+                    if configuration[nameCounter][1][currentConfiguration][1][counter][0] == 1:
+                        configuration[nameCounter][1][currentConfiguration][1][counter][0] = 1
                     else:
-                        temporary[counter][0] = temporary[counter][0] - 1
+                        configuration[nameCounter][1][currentConfiguration][1][counter][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0] - 1
                         
                 #Move Right
                 elif direction == 1:
                     try:
                         #Difficult to understand because 2 represents the second element, but in pure index 2 means the first element.
                         #Everytime we try to use the element number as index, we need to + 1
-                        temporary[counter][temporary[counter][0] + 2] == None 
+                        configuration[nameCounter][1][currentConfiguration][1][counter][configuration[nameCounter][1][currentConfiguration][1][counter][0] + 2] == None 
                     except:
                         break
-                    temporary[counter][0] = temporary[counter][0] + 1
+                    configuration[nameCounter][1][currentConfiguration][1][counter][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0] + 1
                 
                 #Move Down
                 elif direction == 3:
                     
                     #Try if I can get LOWER
                     try:
-                        temporary[counter + 1][0] = 1
+                        configuration[nameCounter][1][currentConfiguration][1][counter + 1][0] = 1
                     except:
                         break
                     
@@ -206,7 +212,7 @@ def center(word, length):
     spaceE = ""
     for x in range(space - (space // 2)):
         spaceE = spaceE + " "
-    
+
     return ANSI(word[2]) + ANSI(word[1]) + spaceB + word[0] + spaceE  + ANSI(0) + ANSI(97)
     
 
@@ -249,13 +255,19 @@ def matrix_text(test):
         except:
             break;
 
-def oneSide(content):
-    content = " " + content + " "
+#NEW 
+def oneSide(inputContent):
+
+    #Pass into new list because we don't want to alter the original
+    content = " " + inputContent + " "
+
     print (ANSI(configuration[0][0]) + ANSI(configuration[0][1]) + content + ANSI(0) + ANSI(configuration[0][0]))
-    
-def twoSide(content):
-    content[0] = " " + content[0]
-    content[1] = content[1] + " "
+
+#NEW    
+def twoSide(inputContent):
+
+    #Pass into new list because we don't want to alter the original
+    content = [" " + inputContent[0], inputContent[1] + " "]
 
     spaces = ""
     for x in range(windowWidth-len(content[1])-len(content[0])):
@@ -263,7 +275,7 @@ def twoSide(content):
 
     print (ANSI(configuration[0][0]) + ANSI(configuration[0][1]) + content[0] + spaces + content[1] + ANSI(0) + ANSI(configuration[0][0]))
     
-#Draw normal text
+#Draw normal text (DEPRICATED)
 def text(left = None, right = None):
     left[0] = " " + left[0]
 
@@ -285,18 +297,22 @@ def seperator():
 
     print(ANSI(int(configuration[0][1])-10) + lineString + ANSI(0) + ANSI(configuration[0][0]))
 
-def menuDisplay(content):
+#NEW
+def menuDisplay(inputContent):
+
+    #Pass into new list because we don't want to alter the original
+    content = [inputContent[0], inputContent[1], inputContent[2]]
     
     #Correct "abbreviation"
     if len(content[0]) > 2:
         content[0] == "xx"
     elif len(content[0]) == 1:
         content[0] = content[0] + " "
-
+    
     #Find string lengths
     lengthDetail = len(content[1])
     lengthAbbrevation = len(content[0]) + 2
-
+    
     #Indent variable
     spaces = ""
     for x in range((windowWidth // 2 - 2)-lengthAbbrevation-lengthDetail):
@@ -307,10 +323,9 @@ def menuDisplay(content):
     content[1] = ANSI(0)+ ANSI(configuration[0][0]) + " " + content[1] + spaces
 
     #NEED TO CALCULATE VARIABLE
-    
     print(content[0] + content[1] + content[2] + ANSI(0) + ANSI(configuration[0][0]))
 
-#Draw a list with an abbreviation, a detail and a status
+#Draw a list with an abbreviation, a detail and a status (DEPRICATED)
 def list(abbreviation, detail, status):
 
     #Correction "abbreviation"
@@ -334,6 +349,7 @@ def list(abbreviation, detail, status):
     
     print(abbreviation + detail + status + ANSI(0) + ANSI(97))
 
+global configuration
 configuration = ReadFile.configuration("configuration.b3d")
 
 #COLORS

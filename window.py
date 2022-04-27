@@ -6,7 +6,6 @@ import requests
 import windowFunctions
 
 def getVPNStatus():
-    
     if os.name in ('nt', 'dos'):
         return windowFunctions.ANSI(33) + "Not supported"
     else:
@@ -21,13 +20,26 @@ def getVPNStatus():
 def window_arrayTest():
     windowFunctions.clear()
 
-    windowFunctions.window("window_configuration")
+    while (True):
+        windowFunctions.clear()
 
-    command = windowFunctions.getch()
-    if command == "exit" or command == "e":
-        window_main()
-    else:
-       window_arrayTest()
+        windowFunctions.window("window_configuration")
+
+        character = windowFunctions.getch()
+        if character == "e":
+            print('\033[?25h', end="")
+            window_main()
+            break
+        elif character == "d":
+            windowFunctions.change(1)
+        elif character == "a":
+            windowFunctions.change(0)
+        elif character == "s":
+            windowFunctions.change(3)
+        elif character == "w":
+            windowFunctions.change(2)
+        elif character == "q":
+            windowFunctions.accept()
 
 #WINDOW window_testbed
 def window_testbed():
@@ -38,7 +50,7 @@ def window_testbed():
     while (True):
         windowFunctions.clear()
         
-        windowFunctions.matrix_text(windowFunctions.temporary )
+        windowFunctions.matrix_text(windowFunctions.temporary)
         
         character = windowFunctions.getch()
         if character == "e":
@@ -85,7 +97,7 @@ def window_main():
     windowFunctions.clear()
     
     #Main window top
-    windowFunctions.text(["3P0H0PE 0.1.2", 41, 97], ["by BE3dARt with <3", 41, 97])
+    windowFunctions.text(["3P0H0PE 0.1.3", 41, 97], ["by BE3dARt with <3", 41, 97])
     windowFunctions.spacing()
     # + requests.get('https://api.ipify.org').text
     windowFunctions.text(["Public IPv4: " + windowFunctions.ANSI(32), 0, 97])
@@ -127,5 +139,3 @@ window_main()
 
 #https://i.stack.imgur.com/9UVnC.png
 #print("MMMMMMMMMMMMMMMMMMMMMMMMFMMMMMMMMMMMMMMMMMMMMMMMMM")
-
-
