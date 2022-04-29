@@ -1,7 +1,7 @@
 import os
 import sys
 
-import ReadFile
+import readFile
 
 global nameCounter
 global moduleCounter
@@ -15,18 +15,62 @@ else:
     import tty
     import termios
 
-def ANSI(code):
-    return "\33[{code}m".format(code=code)
+def ANSI(mode, codeR = None, codeG = None, codeB = None):
+
+    #Trigger only if first argument is filled
+    if codeR is None and codeG is None and codeB is None:
+        return "\33[{code}m".format(code=mode)
+    
+    #Trigger only if every RGB argument is filled
+    elif not codeR is None and not codeG is None and not codeB is None:
+        #mode 0: Foreground, mode 1: Background
+        if mode == 0:
+            return "\u001b[38;2;{r};{g};{b}m".format(r=codeR, g=codeG, b=codeB)
+        else:
+            return "\u001b[48;2;{r};{g};{b}m".format(r=codeR, g=codeG, b=codeB)
+    else:
+        return "Wrong argument!"
+        
 
 windowWidth = 50
 
+#Clear console
+def clear():
+    command = 'clear'
+    if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
+        command = 'cls'
+    else:
+        command = 'clear'
+    os.system(command)
+
+def resetConsoleColor():
+    return str(ANSI(0) + ANSI(0,configuration[0][0][0],configuration[0][0][1],configuration[0][0][2]))
+
+#Center given word and put space around it to make it given length
+def center(word, length):
+    space = length - len(word)
+    
+    spaceB = ""
+    for x in range(space // 2):
+        spaceB = spaceB + " "
+
+    spaceE = ""
+    for x in range(space - (space // 2)):
+        spaceE = spaceE + " "
+
+    return spaceB + word + spaceE
+
 #Translate name to array index and insert it
 def window(name):
+
+    clear()
+    
     global nameCounter
     nameCounter = 1
+    
     while (True):
         try:
-            if configuration[nameCounter][0] == name:
+            if configuration[nameCounter][-1] == name:
                 break
             else:
                 nameCounter += 1
@@ -34,33 +78,32 @@ def window(name):
             print ("Nothing found! Please check spelling!")
             return
 
+    
     global moduleCounter
     moduleCounter = 0
     
     while (True):
         try:
-            if len(configuration[nameCounter][1][moduleCounter][0]) == 1:
-                match configuration[nameCounter][1][moduleCounter]:
-                    case "Seperator-Filled":
-                        seperator()
-                    case "Seperator-Empty":
-                        spacing()
+            if configuration[nameCounter][moduleCounter] == "Seperator-Filled":
+                seperator()
+            elif configuration[nameCounter][moduleCounter] == "Seperator-Empty":
+                spacing()
             else:
-                match configuration[nameCounter][1][moduleCounter][0]:
+                match configuration[nameCounter][moduleCounter][-1]:
                     case "Two-Side":
-                        twoSide(configuration[nameCounter][1][moduleCounter][1])
+                        twoSide(configuration[nameCounter][moduleCounter][0])
                     case "One-Side":
-                        oneSide(configuration[nameCounter][1][moduleCounter][1][0])
+                        oneSide(configuration[nameCounter][moduleCounter][0])
                     case "Display":
-                        display(configuration[nameCounter][1][moduleCounter][1])
+                        display(configuration[nameCounter][moduleCounter][0])
                     case "Menu":
-                        menu(configuration[nameCounter][1][moduleCounter][1])
+                        menu(configuration[nameCounter][moduleCounter][0])
                     case "Menu-Display":
-                        menuDisplay(configuration[nameCounter][1][moduleCounter][1])
+                        menuDisplay(configuration[nameCounter][moduleCounter][0])
                     case "Configuration":
                         global currentConfiguration
                         currentConfiguration = moduleCounter
-                        matrix_text(configuration[nameCounter][1][moduleCounter][1])
+                        matrix_text(configuration[nameCounter][moduleCounter])
             moduleCounter += 1
         except:
             return
@@ -92,19 +135,19 @@ def accept():
     while(True):
         try:
             #Find the active element
-            if configuration[nameCounter][1][currentConfiguration][1][outerCounter][0] != 0:
+            if configuration[nameCounter][currentConfiguration][outerCounter][0] != 0:
                 
                 #Make every other element to off first
                 while(True):
                     try:
-                        configuration[nameCounter][1][currentConfiguration][1][outerCounter][innerCounter][1] = 0
+                        configuration[nameCounter][currentConfiguration][outerCounter][innerCounter][1] = 0
                     except:
                         break
                     else:
                         innerCounter += 1
                 
                 #Make the active element on
-                configuration[nameCounter][1][currentConfiguration][1][outerCounter][configuration[nameCounter][1][currentConfiguration][1][outerCounter][0] + 1][1] = 1
+                configuration[nameCounter][currentConfiguration][outerCounter][configuration[nameCounter][currentConfiguration][outerCounter][0] + 1][1] = 1
             
         except:
             break
@@ -116,19 +159,19 @@ def change_matchColumn(counter, add):
     index = 0
     
     try:
-        configuration[nameCounter][1][currentConfiguration][1][counter + add][configuration[nameCounter][1][currentConfiguration][1][counter][0] + 1] == None
+        configuration[nameCounter][currentConfiguration][counter + add][configuration[nameCounter][currentConfiguration][counter][0] + 1] == None
     except:
         while(True):
             try:
-                configuration[nameCounter][1][currentConfiguration][1][counter + add][configuration[nameCounter][1][currentConfiguration][1][counter][0] - index] == None
+                configuration[nameCounter][currentConfiguration][counter + add][configuration[nameCounter][currentConfiguration][counter][0] - index] == None
             except:
                 index += 1
             else:
-                configuration[nameCounter][1][currentConfiguration][1][counter + add][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0] - (index + 1)
+                configuration[nameCounter][currentConfiguration][counter + add][0] = configuration[nameCounter][currentConfiguration][counter][0] - (index + 1)
                 break
     else:
-        configuration[nameCounter][1][currentConfiguration][1][counter + add][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0]
-    configuration[nameCounter][1][currentConfiguration][1][counter][0] = 0
+        configuration[nameCounter][currentConfiguration][counter + add][0] = configuration[nameCounter][currentConfiguration][counter][0]
+    configuration[nameCounter][currentConfiguration][counter][0] = 0
         
 def change(direction):
 
@@ -139,30 +182,32 @@ def change(direction):
     while(True):
         try:
             #Find the active element
-            if configuration[nameCounter][1][currentConfiguration][1][counter][0] != 0:
+            if configuration[nameCounter][currentConfiguration][counter][0] != 0:
+                
                 #Move Left
                 if direction == 0:
-                    if configuration[nameCounter][1][currentConfiguration][1][counter][0] == 1:
-                        configuration[nameCounter][1][currentConfiguration][1][counter][0] = 1
+                    
+                    if configuration[nameCounter][currentConfiguration][counter][0] == 1:
+                        configuration[nameCounter][currentConfiguration][counter][0] = 1
                     else:
-                        configuration[nameCounter][1][currentConfiguration][1][counter][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0] - 1
+                        configuration[nameCounter][currentConfiguration][counter][0] = configuration[nameCounter][currentConfiguration][counter][0] - 1
                         
                 #Move Right
                 elif direction == 1:
                     try:
                         #Difficult to understand because 2 represents the second element, but in pure index 2 means the first element.
                         #Everytime we try to use the element number as index, we need to + 1
-                        configuration[nameCounter][1][currentConfiguration][1][counter][configuration[nameCounter][1][currentConfiguration][1][counter][0] + 2] == None 
+                        configuration[nameCounter][currentConfiguration][counter][configuration[nameCounter][currentConfiguration][counter][0] + 2] == None 
                     except:
                         break
-                    configuration[nameCounter][1][currentConfiguration][1][counter][0] = configuration[nameCounter][1][currentConfiguration][1][counter][0] + 1
+                    configuration[nameCounter][currentConfiguration][counter][0] = configuration[nameCounter][currentConfiguration][counter][0] + 1
                 
                 #Move Down
                 elif direction == 3:
                     
                     #Try if I can get LOWER
                     try:
-                        configuration[nameCounter][1][currentConfiguration][1][counter + 1][0] = 1
+                        configuration[nameCounter][currentConfiguration][counter + 1][0] = 1
                     except:
                         break
                     
@@ -187,60 +232,38 @@ def change(direction):
             break
         counter += 1
             
-#Clear console
-def clear():
-    command = 'clear'
-    if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
-        command = 'cls'
-    else:
-        command = 'clear'
-    os.system(command)
-
-#Draw spacing
-def spacing():
-    print("")
-
-#Center given word and put space around it to make it given length
-def center(word, length):
-    space = length - len(word[0])
-    
-    spaceB = ""
-    for x in range(space // 2):
-        spaceB = spaceB + " "
-
-    spaceE = ""
-    for x in range(space - (space // 2)):
-        spaceE = spaceE + " "
-
-    return ANSI(word[2]) + ANSI(word[1]) + spaceB + word[0] + spaceE  + ANSI(0) + ANSI(97)
-    
-
 #Draw text
 def matrix_text(test):
 
     outerCounter = 0
     innerCounter = 2
+    
     while (True):
         try:
+            if outerCounter == len(test)-1:
+                break
+            
             outString = test[outerCounter][1]
             
-            #Now find how much space needs to be added
             spaces = ""
             for x in range(15-len(outString)):
               spaces = spaces + " "
               
             outString = outString + spaces
-            
+
+            #Iterate over every field of one menu row
             while(True):
                 try:
-                
+                    #If field is active, turn it green
                     if test[outerCounter][0] == innerCounter - 1:
-                        outString = outString + center([str(test[outerCounter][innerCounter][0]), 97, 102], 8) + ANSI(0) + ANSI(97) + " "
+                        outString = outString + ANSI(1,configuration[0][2][0],configuration[0][2][1],configuration[0][2][2]) + center(test[outerCounter][innerCounter][0], 8) + resetConsoleColor() + " "
                     else:
+                        #If field is ON, turn it red
                         if test[outerCounter][innerCounter][1] == 1:
-                            outString = outString + center([str(test[outerCounter][innerCounter][0]), 97, 41], 8) + ANSI(0) + ANSI(97) + " "
+                            outString = outString + ANSI(1,configuration[0][1][0],configuration[0][1][1],configuration[0][1][2]) + center(test[outerCounter][innerCounter][0], 8) + resetConsoleColor() + " "
+                        #If field is OFF, remove all colors
                         else:
-                            outString = outString + center([str(test[outerCounter][innerCounter][0]), 97, 0], 8) + ANSI(0) + ANSI(97) + " "
+                            outString = outString + center(test[outerCounter][innerCounter][0], 8) + resetConsoleColor() + " "
                     
                     innerCounter += 1
                 except:
@@ -254,8 +277,7 @@ def matrix_text(test):
             outerCounter += 1
         except:
             break;
-
-#NEW 
+ 
 def display(inputContent):
     content = [" " + inputContent[0], inputContent[1]]
     
@@ -264,17 +286,15 @@ def display(inputContent):
     for x in range((windowWidth // 2 - 2)-len(inputContent[0])):
       spaces = spaces + " "
 
-    print (content[0] + spaces + content[1] + ANSI(0) + ANSI(configuration[0][0]))
+    print(content[0] + spaces + content[1] + resetConsoleColor())
 
-#NEW 
 def oneSide(inputContent):
 
     #Pass into new list because we don't want to alter the original
     content = " " + inputContent + " "
 
-    print (ANSI(configuration[0][0]) + ANSI(configuration[0][1]) + content + ANSI(0) + ANSI(configuration[0][0]))
-
-#NEW    
+    print(ANSI(1,configuration[0][1][0],configuration[0][1][1],configuration[0][1][2]) + content + resetConsoleColor())
+    
 def twoSide(inputContent):
 
     #Pass into new list because we don't want to alter the original
@@ -284,31 +304,19 @@ def twoSide(inputContent):
     for x in range(windowWidth-len(content[1])-len(content[0])):
         spaces = spaces + " "
 
-    print (ANSI(configuration[0][0]) + ANSI(configuration[0][1]) + content[0] + spaces + content[1] + ANSI(0) + ANSI(configuration[0][0]))
+    print(ANSI(1,configuration[0][1][0],configuration[0][1][1],configuration[0][1][2]) + content[0] + spaces + content[1] + resetConsoleColor())
+
+def spacing():
+    print("")
     
-#Draw normal text (DEPRICATED)
-def text(left = None, right = None):
-    left[0] = " " + left[0]
-
-    if right == None:
-        print (ANSI(left[1])+ ANSI(left[2]) + left[0] + ANSI(0) + ANSI(97))
-    else:
-        right[0] = right[0] + " "
-        spaces = ""
-        for x in range(windowWidth-len(right[0])-len(left[0])):
-          spaces = spaces + " "
-        print (ANSI(left[1])+ ANSI(left[2]) + left[0] + spaces + right[0] + ANSI(0) + ANSI(97))
-
-#Draw a seperator across whole width
 def seperator():
 
     lineString = ""
     for x in range(windowWidth):
         lineString = lineString + "_"
 
-    print(ANSI(int(configuration[0][1])-10) + lineString + ANSI(0) + ANSI(configuration[0][0]))
+    print(ANSI(0,configuration[0][1][0],configuration[0][1][1],configuration[0][1][2]) + lineString + resetConsoleColor())
 
-#NEW
 def menu(inputContent):
     #Pass into new list because we don't want to alter the original
     content = [inputContent[0], inputContent[1]]
@@ -320,12 +328,10 @@ def menu(inputContent):
         content[0] = content[0] + " "
 
     #Form string and print it
-    content[0] = ANSI(configuration[0][0])+ ANSI(configuration[0][1]) + " " + content[0] + " "
-    content[1] = ANSI(0)+ ANSI(configuration[0][0]) + " " + content[1]
-    print(content[0] + content[1] + ANSI(0) + ANSI(configuration[0][0]))
+    content[0] = ANSI(1,configuration[0][1][0],configuration[0][1][1],configuration[0][1][2]) + " " + content[0] + " "
+    content[1] = resetConsoleColor() + " " + content[1]
+    print(content[0] + content[1] + resetConsoleColor())
 
-
-#NEW
 def menuDisplay(inputContent):
 
     #Pass into new list because we don't want to alter the original
@@ -347,38 +353,14 @@ def menuDisplay(inputContent):
       spaces = spaces + " "
 
     #Form strings
-    content[0] = ANSI(configuration[0][0])+ ANSI(configuration[0][1]) + " " + content[0] + " "
-    content[1] = ANSI(0)+ ANSI(configuration[0][0]) + " " + content[1] + spaces
+    content[0] = ANSI(1,configuration[0][1][0],configuration[0][1][1],configuration[0][1][2]) + " " + content[0] + " "
+    content[1] = resetConsoleColor() + " " + content[1] + spaces
 
     #NEED TO CALCULATE VARIABLE
-    print(content[0] + content[1] + content[2] + ANSI(0) + ANSI(configuration[0][0]))
-
-#Draw a list with an abbreviation, a detail and a status (DEPRICATED)
-def list(abbreviation, detail, status):
-
-    #Correction "abbreviation"
-    if len(abbreviation) > 2:
-        abbreviation == "xx"
-    elif len(abbreviation) == 1:
-        abbreviation = abbreviation + " "
-
-    #Find string lengths
-    lengthDetail = len(detail)
-    lengthAbbrevation = len(abbreviation) + 2
-
-    #Indent status
-    spaces = ""
-    for x in range((windowWidth // 2 - 2)-lengthAbbrevation-lengthDetail):
-      spaces = spaces + " "
-
-    #Form strings
-    abbreviation = ANSI(41)+ ANSI(97) + " " + abbreviation + " "
-    detail = ANSI(0)+ ANSI(97) + " " + detail + spaces
-    
-    print(abbreviation + detail + status + ANSI(0) + ANSI(97))
+    print(content[0] + content[1] + content[2] + resetConsoleColor())
 
 global configuration
-configuration = ReadFile.configuration("configuration.b3d")
+configuration = readFile.captureArray("configuration.b3d")
 
 #COLORS
 #Text-Color         configuration[0][0]
