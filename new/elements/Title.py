@@ -14,7 +14,7 @@ class Title(Element):
             }
         super().__init__()
         
-    def __calculateSpace(self, message: dict, width: int) -> str:
+    def __calculate_whitespaces(self, message: dict, width: int) -> str:
         if not "message_right" in self.__message:
             return " " * (width - len(message["message_left"]))
         return " " * (width - len(message["message_right"]) - len(message["message_left"]))
@@ -22,7 +22,7 @@ class Title(Element):
     def display(self, color_configuration: dict, width: int) -> str:
         message = self.draw_background(color_configuration["background"])
         message += self.__message["message_left"]
-        message += self.__calculateSpace(self.__message, width)
+        message += self.__calculate_whitespaces(self.__message, width)
         if "message_right" in self.__message:
             message += self.__message["message_right"]
         message += self.reset_color(color_configuration["text"])

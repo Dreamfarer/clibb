@@ -6,10 +6,12 @@ class Display(Element):
         self.__message = {"message_left": " " + message, "message_right": variable}
         super().__init__()
 
-    def __calculateSpace(self, message: dict, width: int) -> str:
+    def __calculate_whitespaces(self, message: dict, width: int) -> str:
         return " " * ((width // 2 - 2) - len(message["message_left"]))
 
-    def display(self, color_configuration: dict, width: int) -> str:
-        space = self.__calculateSpace(self.__message, width)
-        message = self.__message["message_left"] + space + self.__message["message_right"]
-        print(message + self.reset_color(color_configuration["text"]))
+    def display(self, color_configuration: dict, width: int) -> None:
+        message = self.__message["message_left"]
+        message += self.__calculate_whitespaces(self.__message, width)
+        message += self.__message["message_right"]
+        message += self.reset_color(color_configuration["text"])
+        print(message)

@@ -1,6 +1,6 @@
 from elements.Element import Element
 
-class Menu(Element):
+class Navigation(Element):
 
     def __init__(self, abbreviation: str, name: str, variable: str = None) -> None:
         if variable == None: 
@@ -22,15 +22,16 @@ class Menu(Element):
     def get_abbreviation(self) -> str:
         return self.__message["abbreviation"].strip()
 
-    def __calculateSpace(self, message: dict, width: int) -> str:
+    def __calculate_whitespaces(self, message: dict, width: int) -> str:
         return " " * ((width // 2 - 2) - len(message["abbreviation"]) - len(message["name"]))
 
-    def display(self, color_configuration: dict, width: int) -> str:
-        space = self.__calculateSpace(self.__message, width)
+    def display(self, color_configuration: dict, width: int) -> None:
         message = self.draw_background(color_configuration["background"])
         message += self.__message["abbreviation"] 
         message += self.reset_color(color_configuration["text"]) 
         message += self.__message["name"]
         if "variable" in self.__message:
-            message += space + self.__message["variable"]
+            message += self.__calculate_whitespaces(self.__message, width)
+            message += self.__message["variable"]
+        message += self.reset_color(color_configuration["text"])
         print(message)

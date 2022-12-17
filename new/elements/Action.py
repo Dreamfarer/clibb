@@ -1,6 +1,6 @@
 from elements.Element import Element
 
-class Configuration(Element):
+class Action(Element):
     def __init__(self) -> None:
         super().__init__()
 

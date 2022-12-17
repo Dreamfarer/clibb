@@ -7,14 +7,14 @@ class Element(ABC):
         pass
 
     @abstractclassmethod
-    def display(self):
+    def display(self) -> None:
         pass
 
-    def reset_color(self, color):
+    def reset_color(self, color: Color) -> str:
         return f"\33[0m\u001b[38;2;{color.r};{color.g};{color.b}m"
 
-    def draw_foreground(self, color):
+    def draw_foreground(self, color: Color) -> str:
         return f"\u001b[38;2;{color.r};{color.g};{color.b}m"
 
-    def draw_background(self, color):
+    def draw_background(self, color: Color) -> str:
         return f"\u001b[48;2;{color.r};{color.g};{color.b}m"

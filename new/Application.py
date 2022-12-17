@@ -12,13 +12,13 @@ class Application():
                 return index
         return -1
 
-    def __clear(self) -> None:
+    def __clear_console(self) -> None:
         if os.name == 'nt': os.system('cls')
         else: os.system('clear')
         
     def run(self) -> None:
 
-        self.__clear()
+        self.__clear_console()
 
         # Returns the option the user has selected in the active window
         user_choice = self.__activeWindow.run()

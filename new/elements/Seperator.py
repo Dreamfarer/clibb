@@ -6,13 +6,13 @@ class Seperator(Element):
         self.__state = state
         super().__init__()
 
-    def __calculateSpace(self, width: int) -> str:
+    def __calculate_whitespaces(self, width: int) -> str:
         return "_" * width
 
     def display(self, color_configuration: dict, width: int) -> str:
         if self.__state == "filled":
             message = self.draw_foreground(color_configuration["background"])
-            message += self.__calculateSpace(width)
+            message += self.__calculate_whitespaces(width)
             message += self.reset_color(color_configuration["text"])
             print(message) 
         else: print("")

@@ -1,5 +1,5 @@
 import sys
-from elements.Menu import Menu
+from elements.Navigation import Navigation
 
 class Window():
 
@@ -44,9 +44,7 @@ class Window():
         user_input = self.getch()
 
         # Retrieve what the user input leads to (abbreviation to name
-        for element in [x for x in self.__elements if type(x) == Menu]:
+        for element in [x for x in self.__elements if type(x) == Navigation]:
             if element.get_abbreviation() == user_input:
                 return {"char": user_input, "name": element.get_name()}
         return {"char": user_input, "name": None}
-    
-    

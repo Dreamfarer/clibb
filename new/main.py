@@ -3,7 +3,7 @@ from Color import Color
 from elements.Title import Title
 from elements.Display import Display
 from elements.Seperator import Seperator
-from elements.Menu import Menu
+from elements.Navigation import Navigation
 from elements.Configuration import Configuration
 
 window_1 = {
@@ -22,15 +22,15 @@ window_1 = {
         Display("OpenAI Status", "VAR1"),
         Seperator("filled"),
         Seperator("empty"),
-        Menu("o", "OpenAI Settings", "VAR2"),
+        Navigation("o", "OpenAI Settings", "VAR2"),
         Seperator("empty"),
-        Menu("t", "Text"),
+        Navigation("t", "Text"),
         Seperator("empty"),
-        Menu("i", "Image"),
+        Navigation("i", "Image"),
         Seperator("empty"),
-        Menu("c", "Code"),
+        Navigation("c", "Code"),
         Seperator("empty"),
-        Menu("s", "Settings"),
+        Navigation("s", "Settings"),
         Seperator("filled"),
         Seperator("empty")
     ]
@@ -49,9 +49,9 @@ window_2 = {
     "elements": [
         Title("OpenAI Settings"),
         Seperator("empty"),
-        Menu("y", "Yes"),
+        Navigation("y", "Yes"),
         Seperator("empty"),
-        Menu("n", "No"),
+        Navigation("n", "No"),
         Seperator("filled"),
         Seperator("empty")
     ]
