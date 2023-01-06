@@ -1,4 +1,4 @@
-from Window import Window
+from .Window import Window
 
 class Application():
 

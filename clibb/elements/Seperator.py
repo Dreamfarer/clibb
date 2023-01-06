@@ -1,4 +1,4 @@
-from elements.Element import Element
+from .Element import Element
 
 class Seperator(Element):
     

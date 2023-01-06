@@ -1,7 +1,7 @@
 import sys
 import os
-from elements.Navigation import Navigation
-from elements.Action import Action
+from .elements.Navigation import Navigation
+from .elements.Action import Action
 
 class Window():
 
