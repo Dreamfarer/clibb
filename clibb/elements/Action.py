@@ -1,4 +1,4 @@
-from elements.Navigation import Navigation
+from .Navigation import Navigation
 
 class Action(Navigation):
     def __init__(self, abbreviation: str, name: str, variable: str = None, action = None) -> None:

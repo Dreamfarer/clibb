@@ -1,4 +1,4 @@
-from elements.Element import Element
+from .Element import Element
 
 class Navigation(Element):
 
@@ -34,4 +34,4 @@ class Navigation(Element):
             message += self.__calculate_whitespaces(self.__message, width)
             message += self.__message["variable"]
         message += self.reset_color(color_configuration["text"])
-        print(message)
+        return message

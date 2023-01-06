@@ -1,5 +1,5 @@
 from abc import ABC, abstractclassmethod
-from Color import Color
+from ..Color import Color
 
 class Element(ABC):
 

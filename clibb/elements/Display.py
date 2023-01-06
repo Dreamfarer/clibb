@@ -1,4 +1,4 @@
-from elements.Element import Element
+from .Element import Element
 
 class Display(Element):
 
@@ -14,4 +14,4 @@ class Display(Element):
         message += self.__calculate_whitespaces(self.__message, width)
         message += self.__message["message_right"]
         message += self.reset_color(color_configuration["text"])
-        print(message)
+        return message
