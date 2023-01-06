@@ -26,4 +26,4 @@ class Title(Element):
         if "message_right" in self.__message:
             message += self.__message["message_right"]
         message += self.reset_color(color_configuration["text"])
-        print(message)
+        return message

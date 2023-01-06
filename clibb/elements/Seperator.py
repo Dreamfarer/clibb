@@ -14,5 +14,5 @@ class Seperator(Element):
             message = self.draw_foreground(color_configuration["background"])
             message += self.__calculate_whitespaces(width)
             message += self.reset_color(color_configuration["text"])
-            print(message) 
-        else: print("")
+            return message
+        else: return ""

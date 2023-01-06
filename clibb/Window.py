@@ -2,15 +2,19 @@ import sys
 import os
 from .elements.Navigation import Navigation
 from .elements.Action import Action
+import shutil
+
 
 class Window():
+
+    previous_message = None
 
     def __init__(self, configuration: dict) -> None:
         try:
             self.__name = configuration["name"]
             self.__elements = configuration["elements"]
             self.__color_configuration = configuration["colors"]
-            self.__width = configuration["width"]
+            if "width" in configuration: self.width = configuration["width"]
         except:
             raise Warning("Please provide 'name', 'elements', 'colors' and 'width' for each window.")
 
@@ -43,23 +47,25 @@ class Window():
 
     def run(self) -> dict:
 
-        self.__clear_console()
+        if hasattr(self, "width"): width = self.width
+        else: width = shutil.get_terminal_size().columns
 
-        # Render all elements that belong to this window
+        message = '\n'.join([element.display(self.__color_configuration, width) for element in self.__elements])
+
+        if not Window.previous_message == message:
+            self.__clear_console()
+            print(message)
+            Window.previous_message = message
+
+        try: user_input = self.getch()
+        except: user_input = None
+
+        result = {"char": user_input, "name": None}
         for element in self.__elements:
-            element.display(self.__color_configuration, self.__width)
-
-        user_input = self.getch()
-
-        # Execute the action inside the window
-        for element in [x for x in self.__elements if type(x) == Action]:
-            if element.get_abbreviation() == user_input:
+            if isinstance(element, Action) and element.get_abbreviation() == user_input:
                 self.__clear_console()
                 element.execute()
-                self.run()
-
-        # Retrieve what the user input leads to (abbreviation to name
-        for element in [x for x in self.__elements if type(x) == Navigation]:
-            if element.get_abbreviation() == user_input:
-                return {"char": user_input, "name": element.get_name()}
-        return {"char": user_input, "name": None}
+                Window.previous_message = None
+            elif isinstance(element, Navigation) and element.get_abbreviation() == user_input:
+                result["name"] = element.get_name()
+        return result

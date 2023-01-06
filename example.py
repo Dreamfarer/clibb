@@ -44,7 +44,6 @@ window_1 = {
 
 window_2 = {
     "name": "OpenAI Settings",
-    "width": 50,
     "colors": {
         "text": clibb.Color(255, 255, 255),
         "background": clibb.Color(112, 60, 160),
