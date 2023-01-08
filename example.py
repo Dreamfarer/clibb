@@ -2,48 +2,52 @@ import clibb
 
 # Example Variables
 class Settings():
-    image_output_directory = "images"
-    test_message = "Hello World"
-    openai_status = "Running"
+    image_output_directory = clibb.Mutable("images")
+    openai_status = clibb.Mutable("Running")
+    color_variable = clibb.Mutable("Option 2")
+    menu_variable = clibb.Mutable("Option B")
+    sound_variable = clibb.Mutable("Option IV")
 
 # Example Functions
 def generate_image() -> None:
-    print(Settings.test_message)
+    Settings.openai_status.set("Changeable!")
     input("Wait...")
 
 # Example Windows
 window_1 = {
     "name": "Home",
-    "width": 50,
+    "width": 75,
     "colors": {
         "text": clibb.Color(255, 255, 255),
-        "background": clibb.Color(112, 60, 160),
-        "pass": clibb.Color(0, 255, 0),
+        "background": clibb.Color(254, 0, 0),
+        "pass": clibb.Color(6, 215, 27),
         "fail": clibb.Color(255, 0, 0),
         "alert": clibb.Color(255, 255, 0),
     },
     "elements": [
-        clibb.Title("OpenAI-CLI 0.3.0", "by Perytron with <3"),
+        clibb.Title("CLIBB", "by Perytron with <3"),
         clibb.Seperator("empty"),
-        clibb.Display("OpenAI Status", Settings.openai_status),
+        clibb.Display("Service", Settings.openai_status),
         clibb.Seperator("filled"),
         clibb.Seperator("empty"),
-        clibb.Navigation("o", "OpenAI Settings", "VAR2"),
+        clibb.Navigation("c", "Configuration", Settings.sound_variable),
+        clibb.Seperator("empty"),
+        clibb.Configuration(Settings.sound_variable, "Volume", "Option I", "Option II", "Option III", "Option IV"),
+        clibb.Seperator("empty"),
+        clibb.Navigation("k", "Code"),
         clibb.Seperator("empty"),
         clibb.Navigation("t", "Text"),
         clibb.Seperator("empty"),
-        clibb.Navigation("i", "Image"),
+        clibb.Configuration(Settings.color_variable, "Color", "Option 1", "Option 2", "Option 3"),
         clibb.Seperator("empty"),
-        clibb.Navigation("c", "Code"),
-        clibb.Seperator("empty"),
-        clibb.Navigation("s", "Settings"),
+        clibb.Configuration(Settings.menu_variable, "Size", "Option A", "Option B"),
         clibb.Seperator("filled"),
         clibb.Seperator("empty")
     ]
 }
 
 window_2 = {
-    "name": "OpenAI Settings",
+    "name": "Configuration",
     "colors": {
         "text": clibb.Color(255, 255, 255),
         "background": clibb.Color(112, 60, 160),
@@ -52,7 +56,7 @@ window_2 = {
         "alert": clibb.Color(255, 255, 0),
     },
     "elements": [
-        clibb.Title("OpenAI Settings"),
+        clibb.Title("Configuration"),
         clibb.Seperator("empty"),
         clibb.Action("g", "Generate", action = generate_image),
         clibb.Seperator("empty"),
