@@ -10,8 +10,8 @@ class Mutable():
     def __len__(self) -> int: return len(str(self))
 
     def set(self, message: Union[float, int, str]):
-        self.__check(message, float, int, str)
-        self.__message = message
+        self.__check(message, float, int, str, Mutable)
+        self.__message = str(message)
         return self
 
     @classmethod

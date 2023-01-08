@@ -21,7 +21,8 @@ class Interactable(ABC):
     def navigate(self, character: str, elements: list) -> None:
         if not character in ["w", "a", "s", "d", "q"] or not elements: return
         currently_highlighted = self.find_highlighted_interactable_element(elements)
-        if not character == "q": currently_highlighted["element"].dehighlight()
+        if character == "q": return currently_highlighted["element"].select(currently_highlighted["column"])
+        currently_highlighted["element"].dehighlight()
         if character == "w": self.up(elements, currently_highlighted)
         elif character == "s": self.down(elements, currently_highlighted)
         elif character == "a": self.left(currently_highlighted)

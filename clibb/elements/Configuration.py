@@ -15,8 +15,7 @@ class Configuration(Element, Interactable):
         Interactable.__init__(self)
         Element.__init__(self)
 
-    def select(self) -> None:
-        pass
+    def select(self, index: int) -> None: self.__variable.set(self.__options[index])
 
     def get_elements(self) -> list: return self.__options
 
