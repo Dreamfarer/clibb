@@ -1,5 +1,6 @@
 from .Application import Application
 from .Color import Color
+from .Mutable import Mutable
 
 from .elements.Title import Title
 from .elements.Display import Display
