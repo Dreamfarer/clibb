@@ -7,14 +7,14 @@ class Navigation(Element):
     def __init__(self, abbreviation: Union[Mutable, str], name: Union[Mutable, str], variable: Union[Mutable, str] = None) -> None:
         if variable == None: 
             self.__message = {
-                "abbreviation": Mutable.new(abbreviation).set(f" {abbreviation} "), 
-                "name": Mutable.new(name).set(f" {name}")
+                "abbreviation": Mutable(abbreviation).set(f" {abbreviation} "), 
+                "name": Mutable(name).set(f" {name}")
                 }
         else:
             self.__message = {
-                "abbreviation": Mutable.new(abbreviation).set(f" {abbreviation} "), 
-                "name": Mutable.new(name).set(f" {name}"),
-                "variable": Mutable.new(variable)
+                "abbreviation": Mutable(abbreviation).set(f" {abbreviation} "), 
+                "name": Mutable(name).set(f" {name}"),
+                "variable": Mutable(variable)
                 }
         super().__init__()
 

@@ -6,11 +6,11 @@ from .Interactable import Interactable
 class Configuration(Element, Interactable):
 
     def __init__(self, variable: Union[Mutable, str], name: Union[Mutable, str], *options) -> None:
-        self.__variable = Mutable.new(variable)
-        self.__message = {"name": Mutable.new(name).set(f" {name}")}
+        self.__variable = Mutable(variable)
+        self.__message = {"name": Mutable(name).set(f" {name}")}
         temporary_list = []
         for option in options:
-            temporary_list.append(Mutable.new(option))
+            temporary_list.append(Mutable(option))
         self.__options = tuple(temporary_list)
         Interactable.__init__(self)
         Element.__init__(self)

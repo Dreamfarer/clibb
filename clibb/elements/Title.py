@@ -7,12 +7,12 @@ class Title(Element):
     def __init__(self, message_left: Union[Mutable, str], message_right: Union[Mutable, str] = None) -> None:
         if message_right == None:
             self.__message = {
-                "message_left": Mutable.new(message_left).set(f" {message_left} ")
+                "message_left": Mutable(message_left).set(f" {message_left} ")
             }
         else:
             self.__message = {
-                "message_left": Mutable.new(message_left).set(f" {message_left}"),
-                "message_right": Mutable.new(message_right).set(f"{message_right} ")
+                "message_left": Mutable(message_left).set(f" {message_left}"),
+                "message_right": Mutable(message_right).set(f"{message_right} ")
             }
         super().__init__()
 
