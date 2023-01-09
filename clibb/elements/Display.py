@@ -6,8 +6,8 @@ class Display(Element):
 
     def __init__(self, message: Union[Mutable, str], variable: Union[Mutable, str]) -> None:
         self.__message = {
-            "message_left": Mutable.new(message).set(f" {message}"), 
-            "message_right": Mutable.new(variable)
+            "message_left": Mutable(message).set(f" {message}"), 
+            "message_right": Mutable(variable)
             }
         super().__init__()
 
