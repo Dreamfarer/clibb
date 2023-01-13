@@ -60,7 +60,7 @@ window_2 = {
         clibb.Seperator("empty"),
         clibb.Action("g", "Generate", action = generate_image),
         clibb.Seperator("empty"),
-        clibb.Navigation("y", "Yes"),
+        clibb.Navigation("h", "Home"),
         clibb.Seperator("empty"),
         clibb.Navigation("n", "No"),
         clibb.Seperator("filled"),
@@ -69,6 +69,7 @@ window_2 = {
 }
 
 console = clibb.Application()
-console.add_window(window_2)
-console.add_window(window_1)
+console.add(window_2, window_1)
+# console.remove(window_1)
+console.activate(window_1)
 console.run()
