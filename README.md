@@ -1,8 +1,14 @@
 ## CLIBB &middot; [![GitHub license](https://img.shields.io/badge/License-GPL--3.0-blue)](https://github.com/facebook/react/blob/main/LICENSE)
 CLIBB (_Command-Line Interface Building Blocks_) is a Python library that streamlines, simplifies and speeds up your CLI creation.
 
-## Installation
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+## Getting Started
+Setting up CLIBB for your awesome projects is as easy as it gets: Either install the library via pip by running `pip install clibb` or clone this repository by running the following commands in your git-enabled terminal of choice.
+```cmd
+git clone https://github.com/Perytron/CLIBB.git
+cd CLIBB
+```
+
+### 
 
 ## Documentation
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
