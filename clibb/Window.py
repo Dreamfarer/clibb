@@ -29,6 +29,9 @@ class Window():
 
     def get_name(self) -> str:
         return self.__name
+    
+    def get_elements(self) -> list:
+        return self.__elements
 
     def run(self) -> dict:
         # Calculate console width if it has not been provided by user

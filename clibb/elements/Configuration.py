@@ -35,7 +35,7 @@ class Configuration(Element, Interactable):
         return message
 
     def __calculate_whitespaces_center(self, message: dict, width: int) -> str:
-        return " " * ((width // 3 - 2) - len(message["name"]))
+        return " " * ((width // 3 - 4) - len(message["name"]))
     
     def __center(self, word: str, desired_length):
         filling_character = " "

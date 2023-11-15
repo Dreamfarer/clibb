@@ -42,6 +42,9 @@ class Application():
             elif isinstance(window, dict): self.__windows.append(Window(window))
             elif isinstance(window, tuple) or isinstance(window, list): self.add(*window)
             else: raise TypeError("Elements of 'windows' must be of <class 'dict'> and/or <class 'Window'>")
+            elements = self.__windows[-1].get_elements()
+            for row, element in enumerate(elements):
+                element.set_row(row)
         if not len(self.__window_history): self.__add_to_history(0)
         
     def remove(self, *windows) -> None:
