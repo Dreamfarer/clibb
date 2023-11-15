@@ -7,6 +7,7 @@ class Settings():
     color_variable = clibb.Mutable("Option 2")
     menu_variable = clibb.Mutable("Option B")
     sound_variable = clibb.Mutable("Option IV")
+    message_variable = clibb.Mutable("Write below!")
 
 # Example Functions
 def generate_image() -> None:
@@ -32,13 +33,16 @@ window_1 = {
         clibb.Seperator("empty"),
         clibb.Navigation("c", "Configuration", Settings.sound_variable),
         clibb.Seperator("empty"),
+        clibb.Navigation("m", "Message", Settings.message_variable),
+        clibb.Seperator("empty"),
         clibb.Configuration(Settings.sound_variable, "Volume", "Option I", "Option II", "Option III", "Option IV"),
         clibb.Seperator("empty"),
         clibb.Navigation("k", "Code"),
-        clibb.Seperator("empty"),
         clibb.Navigation("t", "Text"),
         clibb.Seperator("empty"),
         clibb.Configuration(Settings.color_variable, "Color", "Option 1", "Option 2", "Option 3"),
+        clibb.Seperator("empty"),
+        clibb.Input(Settings.message_variable, "Write"),
         clibb.Seperator("empty"),
         clibb.Configuration(Settings.menu_variable, "Size", "Option A", "Option B"),
         clibb.Seperator("filled"),
@@ -60,7 +64,7 @@ window_2 = {
         clibb.Seperator("empty"),
         clibb.Action("g", "Generate", action = generate_image),
         clibb.Seperator("empty"),
-        clibb.Navigation("y", "Yes"),
+        clibb.Navigation("h", "Home"),
         clibb.Seperator("empty"),
         clibb.Navigation("n", "No"),
         clibb.Seperator("filled"),
@@ -69,6 +73,7 @@ window_2 = {
 }
 
 console = clibb.Application()
-console.add_window(window_2)
-console.add_window(window_1)
+console.add(window_2, window_1)
+# console.remove(window_1)
+console.activate(window_1)
 console.run()

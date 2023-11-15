@@ -16,4 +16,4 @@ class Seperator(Element):
         else: return ""
 
     def __calculate_whitespaces(self, width: int) -> str:
-        return "_" * width
+        return "▁" * width
