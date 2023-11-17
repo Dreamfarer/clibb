@@ -21,6 +21,7 @@ class Settings:
     menu_variable = clibb.Mutable("Option B")
     sound_variable = clibb.Mutable("Option IV")
     message_variable = clibb.Mutable("Write below!")
+    checkbox_variable = clibb.Mutable(True)
 
 
 # Example Functions
@@ -65,6 +66,8 @@ window_1 = {
         ),
         clibb.Seperator("empty"),
         clibb.Action("o", "Name Change", action=adult.change_name, stealth=False),
+        clibb.Seperator("empty"),
+        clibb.Checkbox("Checkbox", Settings.checkbox_variable),
         clibb.Seperator("empty"),
         clibb.Navigation("k", "Code"),
         clibb.Navigation("t", "Text"),

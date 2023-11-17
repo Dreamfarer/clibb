@@ -33,10 +33,16 @@ class Mutable:
                     "Callable must return a string-convertible value."
                 ) from e
             return result
-        return str(self.__value)
+        return str(self.unwrap())
 
     def __len__(self) -> int:
         return len(str(self))
+
+    def type(self) -> type:
+        """
+        Get the type of the variable that is wrapped inside the 'Mutable' container.
+        """
+        return type(self.unwrap())
 
     def unwrap(self) -> Union[float, int, str, bool, Callable]:
         """
@@ -49,7 +55,10 @@ class Mutable:
         Assign a new value to this object and return the object.
         """
         self.__check(value, float, int, str, bool, Callable, Mutable)
-        self.__value = str(value) if not callable(value) else value
+        if isinstance(value, Mutable):
+            self.__value = value.unwrap()
+        else:
+            self.__value = value
         return self
 
     def __check(self, value: Union[float, int, str, Callable], *types) -> None:
