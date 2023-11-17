@@ -3,55 +3,70 @@ from typing import Union, Callable
 
 class Mutable:
     """
-    A container that holds a value of type 'str', 'int', 'float', or a function
-    that evaluates to a 'str'-convertible value. The container allows
-    these usually non-mutable types to be mutable by reference.
+    A container that holds a value of type 'str', 'int', 'float', 'bool'
+    or a function that evaluates to a 'str'-convertible value.
+    The container allows these usually non-mutable types to be mutable by reference.
     """
 
-    def __new__(cls, message: Union[float, int, str, Callable]) -> "Mutable":
-        if isinstance(message, (float, int, str, Callable)):
+    def __new__(cls, value: Union[float, int, str, bool, Callable]) -> "Mutable":
+        if isinstance(value, (float, int, str, bool, Callable)):
             return object.__new__(cls)
-        if isinstance(message, Mutable):
-            return message
+        if isinstance(value, Mutable):
+            return value
         raise TypeError(
-            "'Mutable' must be instanciated with a parameter of type 'str', 'int', 'float' or 'callable'."
+            "'Mutable' must be instanciated with a parameter of type 'str', 'int', 'float', 'bool' or 'callable'."
         )
 
-    def __init__(self, message: Union[float, int, str]) -> None:
-        self.set(message)
+    def __init__(self, value: Union[float, int, str, bool, Callable]) -> None:
+        self.set(value)
 
     def __str__(self) -> str:
         """
         Return a string representation of the contained value.
         If the value is a callable, it evaluates and returns its string representation.
         """
-        if isinstance(self.__message, Callable):
+        if isinstance(self.__value, Callable):
             try:
-                result = str(self.__message())
+                result = str(self.__value())
             except Exception as e:
                 raise ValueError(
                     "Callable must return a string-convertible value."
                 ) from e
             return result
-        return str(self.__message)
+        return str(self.unwrap())
 
     def __len__(self) -> int:
         return len(str(self))
 
-    def set(self, message: Union[float, int, str, Callable]) -> "Mutable":
+    def type(self) -> type:
+        """
+        Get the type of the variable that is wrapped inside the 'Mutable' container.
+        """
+        return type(self.unwrap())
+
+    def unwrap(self) -> Union[float, int, str, bool, Callable]:
+        """
+        Unwrap the variable that is wrapped inside the 'Mutable' container.
+        """
+        return self.__value
+
+    def set(self, value: Union[float, int, str, bool, Callable]) -> "Mutable":
         """
         Assign a new value to this object and return the object.
         """
-        self.__check(message, float, int, str, Callable, Mutable)
-        self.__message = str(message) if not callable(message) else message
+        self.__check(value, float, int, str, bool, Callable, Mutable)
+        if isinstance(value, Mutable):
+            self.__value = value.unwrap()
+        else:
+            self.__value = value
         return self
 
-    def __check(self, message: Union[float, int, str, Callable], *types) -> None:
+    def __check(self, value: Union[float, int, str, Callable], *types) -> None:
         """
-        Check if 'message' is of a given type or types. Raise TypeError if not.
+        Check if 'value' is of a given type or types. Raise TypeError if not.
         """
-        if not isinstance(message, types):
+        if not isinstance(value, types):
             expected_types = ", ".join(t.__name__ for t in types)
             raise TypeError(
-                f"Expected type(s): {expected_types}, got: {type(message).__name__}"
+                f"Expected type(s): {expected_types}, got: {type(value).__name__}"
             )
