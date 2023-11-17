@@ -73,7 +73,7 @@ window_1 = {
             Settings.color_variable, "Color", "Option 1", "Option 2", "Option 3"
         ),
         clibb.Seperator("empty"),
-        clibb.Input(Settings.message_variable, "Write"),
+        clibb.Input("Write", Settings.message_variable),
         clibb.Seperator("empty"),
         clibb.Configuration(Settings.menu_variable, "Size", "Option A", "Option B"),
         clibb.Seperator("filled"),
