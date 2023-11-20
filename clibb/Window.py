@@ -1,4 +1,3 @@
-import sys
 import os
 from .elements.Navigation import Navigation
 from .elements.Action import Action
@@ -101,21 +100,29 @@ class Window:
 
     def __get_character(self) -> str:
         """
-        Captures a single keystroke from the user in a cross-platform manner.
+        Captures a single ASCII keystroke from the user in a cross-platform manner.
         """
         if os.name == "nt":
             import msvcrt
 
-            return msvcrt.getch().decode()
+            while True:
+                key = msvcrt.getch()
+                if key and 0 <= ord(key) < 128:
+                    return key.decode()
         else:
             import termios
             import tty
+            import sys
 
             old_settings = termios.tcgetattr(sys.stdin)
-            tty.setraw(sys.stdin)
-            char = sys.stdin.read(1)
-            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
-            return char
+            try:
+                tty.setraw(sys.stdin)
+                while True:
+                    char = sys.stdin.read(1)
+                    if 0 <= ord(char) < 128:
+                        return char
+            finally:
+                termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
     def __clear_console(self) -> None:
         """
