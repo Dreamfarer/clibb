@@ -1,68 +1,60 @@
 from abc import ABC, abstractclassmethod
 from typing import Union
 
+
 class Interactable(ABC):
+    def __init__(self) -> None:
+        self.__highlighted = None
 
-    def __init__(self) -> None: self.__highlighted = None
+    def highlight(self, index: int) -> None:
+        self.__highlighted = index
 
-    def highlight(self, index: int): self.__highlighted = index
-    def dehighlight(self): self.__highlighted = None
-    def highlighted(self)-> Union[int, None]: return self.__highlighted
+    def dehighlight(self) -> None:
+        self.__highlighted = None
+
+    def highlighted(self) -> Union[int, None]:
+        return self.__highlighted
 
     @abstractclassmethod
     def select(self) -> None:
         pass
 
     @abstractclassmethod
-    def get_elements(self) -> list:
+    def __len__(self) -> list:
         pass
 
     @classmethod
-    def navigate(self, character: str, elements: list) -> None:
-        if not character in ["w", "a", "s", "d", "q"] or not elements: return
-        currently_highlighted = self.find_highlighted_interactable_element(elements)
-        if character == "q": return currently_highlighted["element"].select(currently_highlighted["column"])
-        currently_highlighted["element"].dehighlight()
-        if character == "w": self.up(elements, currently_highlighted)
-        elif character == "s": self.down(elements, currently_highlighted)
-        elif character == "a": self.left(currently_highlighted)
-        elif character == "d": self.right(currently_highlighted)
+    def navigate(cls, character: str, elements: list) -> None:
+        if character not in "wasdq" or not elements:
+            return
+        current = cls.find_highlighted(elements)
+        if character == "q":
+            return current["element"].select(current["column"])
+        current["element"].dehighlight()
+        cls.move(character, elements, current)
 
     @classmethod
-    def find_highlighted_interactable_element(self, elements: list) -> dict:
+    def find_highlighted(cls, elements: list) -> dict:
         for row, element in enumerate(elements):
             column = element.highlighted()
-            if not element.highlighted() == None:
+            if column is not None:
                 return {"element": element, "column": column, "row": row}
 
     @classmethod
-    def up(self, elements: list, currently_highlighted: dict) -> None:
-        new_row_index = self.index_clamp(currently_highlighted["row"] - 1, elements)
-        new_column_index = self.index_restrict(currently_highlighted["column"], elements[new_row_index].get_elements())
-        elements[new_row_index].highlight(new_column_index)
-    
-    @classmethod
-    def down(self, elements: list, currently_highlighted: dict) -> None:
-        new_row_index = self.index_clamp(currently_highlighted["row"] + 1, elements)
-        new_column_index = self.index_restrict(currently_highlighted["column"], elements[new_row_index].get_elements())
-        elements[new_row_index].highlight(new_column_index)
+    def move(cls, direction: str, elements: list, current: dict) -> None:
+        row, col = current["row"], current["column"]
+        if direction == "w":
+            row -= 1
+        elif direction == "s":
+            row += 1
+        elif direction == "a":
+            col -= 1
+        elif direction == "d":
+            col += 1
+        new_row = cls.index_clamp(row, len(elements))
+        new_col = cls.index_clamp(col, len(current["element"]))
+        elements[new_row].highlight(new_col)
 
     @classmethod
-    def left(self, currently_highlighted: dict) -> None:
-        new_column_index = self.index_clamp(currently_highlighted["column"] - 1, currently_highlighted["element"].get_elements())
-        currently_highlighted["element"].highlight(new_column_index)
-
-    @classmethod
-    def right(self, currently_highlighted: dict) -> None:
-        new_column_index = self.index_clamp(currently_highlighted["column"] + 1, currently_highlighted["element"].get_elements())
-        currently_highlighted["element"].highlight(new_column_index)
-
-    @classmethod
-    def index_clamp(cls, index: int, elements: list) -> int: 
-        return index % len(elements)
-
-    @classmethod
-    def index_restrict(cls, index: int, elements: list) -> int: 
-        if index >= len(elements): return len(elements) - 1
-        if index < 0: return 0
-        return index
+    def index_clamp(cls, index: int, size: int) -> int:
+        return max(0, min(index, size - 1))

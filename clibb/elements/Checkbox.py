@@ -12,16 +12,14 @@ class Checkbox(Element, Interactable):
     ) -> None:
         self.__message = {"name": Mutable(name).set(f" {name}")}
         self.__variable = Mutable(variable)
-        self.__options = tuple([Mutable("[X]")])
         Interactable.__init__(self)
         Element.__init__(self)
 
     def select(self, index: int) -> None:
         self.__variable.set(not self.__variable.unwrap())
-        self.__options = tuple([Mutable(self.__variable.unwrap)])
 
-    def get_elements(self) -> list:
-        return self.__options
+    def __len__(self) -> list:
+        return 1
 
     def display(self, color_configuration: dict, width: int) -> str:
         message = f"{self.__message['name']}{self.__calculate_whitespaces(self.__message, width)}"
