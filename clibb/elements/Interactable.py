@@ -57,4 +57,4 @@ class Interactable(ABC):
 
     @classmethod
     def index_clamp(cls, index: int, size: int) -> int:
-        return max(0, min(index, size - 1))
+        return index % size if size > 0 else 0
