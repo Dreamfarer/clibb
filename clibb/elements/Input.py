@@ -12,7 +12,6 @@ class Input(Element, Interactable):
     ) -> None:
         self.__variable = Mutable(variable)
         self.__message = {"name": Mutable(name).set(f" {name}")}
-        self.__options = tuple([Mutable("...")])
         self.__width = None
         Interactable.__init__(self)
         Element.__init__(self)
@@ -27,10 +26,9 @@ class Input(Element, Interactable):
         print(f"\x1b[{moves_up};{moves_forward}H\x1b[0K", end="")
         user_input = input()
         self.__variable.set(Mutable(f"{user_input}"))
-        self.__options = tuple([Mutable(f"{user_input}")])
 
-    def get_elements(self) -> list:
-        return self.__options
+    def __len__(self) -> list:
+        return 1
 
     def display(self, color_configuration: dict, width: int) -> str:
         self.__width = width
@@ -38,7 +36,7 @@ class Input(Element, Interactable):
         message += f"> {self.draw_background(color_configuration['pass']) if self.highlighted() != None else ''}"
         return (
             message
-            + f"{self.__options[0]}{self.reset_color(color_configuration['text'])} "
+            + f"{self.__variable}{self.reset_color(color_configuration['text'])} "
         )
 
     def __calculate_whitespaces(self, message: dict, width: int) -> str:
