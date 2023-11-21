@@ -13,30 +13,23 @@ class Person:
         return self.__name
 
 
+# Example Object
+adult = Person("Hannah")
+
+
 # Example Variables
 class Settings:
-    image_output_directory = clibb.Mutable("images")
-    openai_status = clibb.Mutable("Running")
     color_variable = clibb.Mutable("Option 2")
     menu_variable = clibb.Mutable("Option B")
     sound_variable = clibb.Mutable("Option IV")
-    message_variable = clibb.Mutable("Write below!")
+    message_variable = clibb.Mutable("Change me below!")
     checkbox_variable = clibb.Mutable(True)
 
-
-# Example Functions
-def generate_image() -> None:
-    Settings.openai_status.set("Changeable!")
-    input("Wait...")
-
-
-# Example Object
-adult = Person("Hannah")
 
 # Example Windows
 window_1 = {
     "name": "Home",
-    "width": 75,
+    "width": 100,
     "colors": {
         "text": clibb.Color(255, 255, 255),
         "background": clibb.Color(254, 0, 0),
@@ -47,38 +40,41 @@ window_1 = {
     "elements": [
         clibb.Title("CLIBB", "by Perytron with <3"),
         clibb.Separator("empty"),
-        clibb.Display("Service", Settings.openai_status),
+        clibb.Display("How-to", "Navigate with 'w', 'a', 's', 'd'"),
+        clibb.Display("", "Activate with 'q' and return with 'e'"),
         clibb.Separator("empty"),
-        clibb.Display("Name", adult.get_name),
-        clibb.Separator("filled"),
-        clibb.Separator("empty"),
-        clibb.Navigation("c", "Configuration", Settings.sound_variable),
-        clibb.Separator("empty"),
-        clibb.Navigation("m", "Message", Settings.message_variable),
+        clibb.Display("Current Option:", Settings.sound_variable),
         clibb.Separator("empty"),
         clibb.Configuration(
             Settings.sound_variable,
-            "Volume",
+            "Options:",
             "Option I",
             "Option II",
             "Option III",
             "Option IV",
         ),
+        clibb.Separator("filled"),
         clibb.Separator("empty"),
-        clibb.Action("o", "Name Change", action=adult.change_name, stealth=False),
+        clibb.Display("Current Name:", adult.get_name),
+        clibb.Separator("empty"),
+        clibb.Action(
+            "o", "Set Name to 'Sophie'", action=adult.change_name, stealth=False
+        ),
+        clibb.Separator("filled"),
+        clibb.Separator("empty"),
+        clibb.Display("Current Text", Settings.message_variable),
+        clibb.Separator("empty"),
+        clibb.Input("Input Text", Settings.message_variable),
+        clibb.Separator("filled"),
+        clibb.Separator("empty"),
+        clibb.Display("Current Text", Settings.checkbox_variable),
         clibb.Separator("empty"),
         clibb.Checkbox("Checkbox", Settings.checkbox_variable),
+        clibb.Separator("filled"),
         clibb.Separator("empty"),
-        clibb.Navigation("k", "Code"),
-        clibb.Navigation("t", "Text"),
-        clibb.Separator("empty"),
-        clibb.Configuration(
-            Settings.color_variable, "Color", "Option 1", "Option 2", "Option 3"
+        clibb.Navigation(
+            "c", "Configuration", "Go to the 'Configuration' window with 'c'"
         ),
-        clibb.Separator("empty"),
-        clibb.Input("Write", Settings.message_variable),
-        clibb.Separator("empty"),
-        clibb.Configuration(Settings.menu_variable, "Size", "Option A", "Option B"),
         clibb.Separator("filled"),
         clibb.Separator("empty"),
     ],
@@ -96,11 +92,9 @@ window_2 = {
     "elements": [
         clibb.Title("Configuration"),
         clibb.Separator("empty"),
-        clibb.Action("g", "Generate", action=generate_image, stealth=False),
-        clibb.Separator("empty"),
-        clibb.Navigation("h", "Home"),
-        clibb.Separator("empty"),
-        clibb.Navigation("n", "No"),
+        clibb.Navigation(
+            "h", "Home", "Go to the 'Home' window with 'h' or return with 'e'"
+        ),
         clibb.Separator("filled"),
         clibb.Separator("empty"),
     ],
