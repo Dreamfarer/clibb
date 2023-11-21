@@ -1,116 +1,114 @@
 from .Window import Window
 from typing import Union
+from collections import deque
 
 
 class Application:
     def __init__(self) -> None:
         self.__windows = []
-        self.__window_history = []
+        self.__history = deque()
 
     def run(self) -> None:
         """
-        Run CLIBB! Remember to add windows first with instance.add() before
-        calling CLIBB.
+        Run CLIBB!
         """
         if not len(self.__windows):
             raise Exception("No windows found. Please add windows with instance.add()!")
-
-        # Returns the option the user has selected in the active window
-        user_choice = self.__windows[self.__window_history[-1]].run()
-
-        # Return from current window
-        if user_choice["char"] == "e":
-            if len(self.__window_history) >= 2:
-                self.__window_history = self.__window_history[:-1]
-            else:
-                return
-
-        # Change windows
-        else:
-            index = self.__find_window_index(user_choice["name"])
-            if index != -1:
-                self.__add_to_history(index)
-
+        if not len(self.__history):
+            raise Exception("No window has been actiavated.")
+        self.__switch_window(self.__history[-1].run())
         self.run()
 
-    def add(self, *windows) -> None:
+    def activate(self, name: Union[Window, dict, str]) -> None:
         """
-        Add windows by 'dict' (configuration) or 'Window' (object)
-        to the application. These can be passed as standalone parameters
-        or within tuples and lists.
+        Activate the window by referencing it with either its name ('str'),
+        its configuration ('dict') or the object itself ('Window').
+
+        Raise 'Exception' if the referenced window does not exist.
+        """
+        window = self.__find_window(name)
+        if len(self.__history) >= 2 and self.__history[-2] == window:
+            self.__history.pop()
+        else:
+            self.__history.append(window)
+
+    def add(self, *windows: Union[Window, dict, tuple, list]) -> None:
+        """
+        Add windows by referencing them with either its configuration ('dict')
+        or the object itself ('Window').
+        The reference can be passed as standalone parameters or within tuples and lists.
+
+        Raise 'Exception' if the referenced window does not exist.
         """
         for window in windows:
-            if isinstance(window, Window):
-                self.__windows.append(window)
-            elif isinstance(window, dict):
-                self.__windows.append(Window(window))
-            elif isinstance(window, tuple) or isinstance(window, list):
+            if isinstance(window, (Window, dict)):
+                self.__windows.append(
+                    Window(window) if isinstance(window, dict) else window
+                )
+            elif isinstance(window, (tuple, list)):
                 self.add(*window)
             else:
                 raise TypeError(
-                    "Elements of 'windows' must be of <class 'dict'> and/or <class 'Window'>"
+                    "Elements of 'windows' must be of type 'dict' (configuration) or 'Window' (object) as a standalone variable or wrapped inside a tuple or list."
                 )
             elements = self.__windows[-1].get_elements()
             for row, element in enumerate(elements):
                 element.set_row(row)
-        if not len(self.__window_history):
-            self.__add_to_history(0)
 
-    def remove(self, *windows) -> None:
+    def remove(self, *windows: Union[Window, dict, tuple, list, str]) -> None:
         """
-        Remove windows by referencing them with 'str' (name),
-        'dict' (configuration) or 'Window' (object). The reference can be
-        passed as standalone parameters or within tuples and lists.
+        Remove windows by referencing them with either its name ('str'),
+        its configuration ('dict') or the object itself ('Window').
+        The reference can be passed as standalone parameters or within tuples and lists.
 
         Raise 'Exception' if the referenced window does not exist.
         """
-        for name in windows:
-            if isinstance(name, (str, dict, Window)):
-                index = self.__find_window_index(name)
-                if index == -1:
-                    raise Exception(f"Window does not exist")
-                del self.__windows[index]
-                if (
-                    self.__window_history[-1] == index
-                    or self.__window_history[-1] > len(self.__windows) - 1
-                ):
-                    self.__window_history[-1] = len(self.__windows) - 1
-            elif isinstance(name, (list, tuple)):
-                self.remove(*name)
+        for window in windows:
+            if isinstance(window, (Window, dict, str)):
+                reference = self.__find_window(window)
+                if self.__history and self.__history[-1] == reference:
+                    self.__switch_window({"char": "e"})
+                self.__windows.remove(reference)
+
+            elif isinstance(window, (list, tuple)):
+                self.remove(*window)
+
             else:
-                raise TypeError("Elements of 'windows' must be of <class 'str'>")
+                raise TypeError(
+                    "Elements of 'windows' must be of type 'dict' (configuration) or 'Window' (object) as a standalone variable or wrapped inside a tuple or list. Alternatively, the window can be delted by supplying its name in type 'str'."
+                )
 
-    def activate(self, name: Union[str, dict, Window]) -> None:
+    def __find_window(self, identifier: Union[str, dict, Window]) -> Window:
         """
-        Activate the window by referencing it with 'str' (name),
-        'dict' (configuration) or 'Window' (object).
+        Find the window matching the identifier. The identifier can either be its
+        name ('str'), its configuration ('dict') or the object itself ('Window').
 
         Raise 'Exception' if the referenced window does not exist.
         """
-        index = self.__find_window_index(name)
-        if index == -1:
-            raise Exception(f"Window does not exist")
-        self.__window_history[-1] = index
-
-    def __find_window_index(self, window_or_name: Union[str, dict, Window]) -> int:
-        for index, window in enumerate(self.__windows):
-            if isinstance(window_or_name, str):
-                if str(window) == window_or_name:
-                    return index
-            elif isinstance(window_or_name, dict):
+        for window in self.__windows:
+            if isinstance(identifier, str):
+                if str(window) == identifier:
+                    return window
+            if isinstance(identifier, dict):
                 try:
-                    if str(window) == window_or_name["name"]:
-                        return index
+                    if str(window) == identifier["name"]:
+                        return window
                 except:
                     raise Exception(f"Window configuration is lacking 'name' key")
-            elif isinstance(window_or_name, Window):
-                if window == window_or_name:
-                    return index
-        return -1
+            elif isinstance(identifier, Window):
+                if window == identifier:
+                    return window
+        raise Exception(f"Window does not exist")
 
-    def __add_to_history(self, new_index: int) -> None:
-        if new_index in self.__window_history:
-            list_index = self.__window_history.index(new_index)
-            self.__window_history = self.__window_history[: list_index + 1]
-        else:
-            self.__window_history.append(new_index)
+    def __switch_window(self, user_choice: dict):
+        """
+        Switch to the window denoted by the 'name' key of 'user_choice'.
+        Return to the previous window if the 'char' key is equal to 'e'.
+        """
+        try:
+            self.activate(user_choice["name"])
+        except:
+            if user_choice["char"] == "e":
+                self.__history.pop()
+                if not self.__history:
+                    quit()

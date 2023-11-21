@@ -1,13 +1,14 @@
 import os
+import shutil
+from typing import Union
 from .elements.Navigation import Navigation
 from .elements.Action import Action
 from .elements.Interactable import Interactable
-import shutil
 
 
 class Window:
     """
-    The Window class represents a single window within the CLIBB framework. It manages
+    The 'Window' class represents a single window within the CLIBB framework. It manages
     the display and interaction of various elements within the command line interface.
     """
 
@@ -50,11 +51,11 @@ class Window:
         self.__refresh(self.__build_window(self.__get_width()))
         return self.__act(self.__get_character())
 
-    def __act(self, user_input: str) -> dict:
+    def __act(self, user_input: str) -> Union[dict, str]:
         """
         Processes user input and determines corresponding actions.
         """
-        result = {"char": user_input, "name": None}
+        Interactable.navigate(user_input, self.__interactable_elements)
         for element in self.__elements:
             if isinstance(element, Action) and element.get_abbreviation() == user_input:
                 if not element.get_stealth():
@@ -65,9 +66,8 @@ class Window:
                 isinstance(element, Navigation)
                 and element.get_abbreviation() == user_input
             ):
-                result["name"] = element.get_name()
-        Interactable.navigate(user_input, self.__interactable_elements)
-        return result
+                return {"char": user_input, "name": element.get_name()}
+        return {"char": user_input}
 
     def __refresh(self, message: str) -> None:
         """

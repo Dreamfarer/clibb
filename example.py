@@ -108,6 +108,7 @@ window_2 = {
 
 console = clibb.Application()
 console.add(window_2, window_1)
-# console.remove(window_1)
+console.remove(window_2)
+console.add(window_2)
 console.activate(window_1)
 console.run()
