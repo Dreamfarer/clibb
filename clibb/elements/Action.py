@@ -6,7 +6,7 @@ from .Navigation import Navigation
 class Action(Navigation):
 
     """
-    Element that, when activated, executes the function passed to it on initialization.
+    Element that, when activated with 'q', executes the function passed to it on initialization.
     It makes sense to use the function of an object in order for you to be able
     to store and further process the function's output.
 

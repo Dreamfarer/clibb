@@ -6,12 +6,11 @@ from .Element import Element
 class Display(Element):
 
     """
-    Element that displays text on the left side, followed by a variable value
-    on the right side.
+    Element that shows text, the state of a variable, or the output of a function.
     """
 
     def __init__(
-        self, message: Union[Mutable, str], variable: [Mutable, str, Callable]
+        self, message: Union[Mutable, str, Callable], variable: [Mutable, str, Callable]
     ) -> None:
         self.__message = {
             "message_left": Mutable(message),
@@ -20,6 +19,9 @@ class Display(Element):
         super().__init__()
 
     def display(self, color_configuration: dict, width: int) -> str:
+        """
+        Constructs and returns a string representation of the display element.
+        """
         message = str(self.__message["message_left"])
         message += self.__calculate_whitespaces(self.__message, width)
         message += str(self.__message["message_right"])
@@ -27,4 +29,7 @@ class Display(Element):
         return message
 
     def __calculate_whitespaces(self, message: dict, width: int) -> str:
+        """
+        Calculates and returns the whitespace needed for alignment in the console.
+        """
         return " " * ((width // 3 - 2) - len(message["message_left"]))
