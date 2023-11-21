@@ -3,8 +3,8 @@ from typing import Union, Callable
 
 class Mutable:
     """
-    A container that holds a value of type 'str', 'int', 'float', 'bool'
-    or a function that evaluates to a 'str'-convertible value.
+    The 'Mutable' class is a container that holds a value of type 'str', 'int',
+    'float', 'bool' or a function that evaluates to a 'str'-convertible value.
     The container allows these usually non-mutable types to be mutable by reference.
     """
 
