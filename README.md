@@ -1,35 +1,46 @@
 ## CLIBB &middot; [![GitHub license](https://img.shields.io/badge/License-GPL--3.0-blue)](https://github.com/facebook/react/blob/main/LICENSE)
-CLIBB (_Command-Line Interface Building Blocks_) is a Python library that streamlines, simplifies and speeds up your CLI creation.
+CLIBB (_Command-Line Interface Building Blocks_) is a Python library that streamlines, simplifies and speeds up your CLI creation. It provides **eight** unique and customizable building blocks to help you build a pretty, robust, and interactive CLI.
 
 ## Getting Started
-Setting up CLIBB for your awesome projects is as easy as it gets: Either install the library via pip by running `pip install clibb` or clone this repository by running the following commands in your git-enabled terminal of choice.
-```cmd
-git clone https://github.com/Perytron/CLIBB.git
-cd CLIBB
-```
+1. Install the CLIBB via `pip` by running `pip install clibb`.
+1. Create a new Python file in your IDE of choice.
+1. Configure your windows using the provided building blocks detailed [here](https://github.com/Perytron/clibb/tree/doc#documentation).
+1. Initialize CLIBB with `console = clibb.Application()`
+1. Add your previously created window configurations with `console.add(window_1, window_2)`.
+1. Set a starting window with `console.activate(window_1)`.
+1. Finally execute CLIBB and enjoy with `console.run()`
 
-### 
 
 ## Documentation
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Proper documentation will be provided in a future deployment. For the time being, please refer to the detailed example below and use the information provided by your IDE based on the code documentation.
 
-## Examples
-Read the documentation to get a detailed insight into using CLIBB and unleash its full potential. Have a look at the many different examples and templates included with this repository. I know this sounds so 🦆-ing boring; that is why I present you a simple yet complete application that will get you started:
+## Example
+To help you get started without wading through the 🦆-ing boring documentation; here is a complete example that shows you everything CLIBB has to offer:
 ```python
 import clibb
 
-# Variables used across windows
-message = clibb.Mutable("I am CLIBB!")
-mode = clibb.Mutable("Light")
+# Example class
+class Person:
+    def __init__(self, name: str) -> None:
+        self.__name = name
+    def change_name(self) -> None:
+        self.__name = "Sophie"
+    def get_name(self) -> str:
+        return self.__name
 
-# Functions executed by the 'Action' element
-def change_message() -> None:
-    message.set("I can change!")
+# Example object
+adult = Person("Hannah")
 
-# Example window showing every available element
+# Example variables
+class Settings:
+    options = clibb.Mutable("Option IV")
+    user_input = clibb.Mutable("Change me below!")
+    checkbox_state = clibb.Mutable(True)
+
+# Example window configuration showing all available building blocks.
 window_1 = {
     "name": "Home",
-    "width": 75,
+    "width": 100,
     "colors": {
         "text": clibb.Color(255, 255, 255),
         "background": clibb.Color(254, 0, 0),
@@ -39,27 +50,65 @@ window_1 = {
     },
     "elements": [
         clibb.Title("CLIBB", "by Perytron with <3"),
-        clibb.Seperator("empty"),
-        clibb.Display("Mode", mode),
-        clibb.Seperator("filled"),
-        clibb.Seperator("empty"),
-        clibb.Navigation("c", "Configuration", message),
-        clibb.Seperator("empty"),
-        clibb.Action("m", "Message", action = change_message),
-        clibb.Seperator("empty"),
-        clibb.Configuration(mode, "Mode", "Light", "Dark", "Contrast"),
-        clibb.Seperator("filled"),
-        clibb.Seperator("empty")
-    ]
+        clibb.Separator("empty"),
+        clibb.Display("How-to", "Navigate with 'w', 'a', 's', 'd'"),
+        clibb.Display("", "Activate with 'q' and return with 'e'"),
+        clibb.Separator("empty"),
+        clibb.Display("Current Option:", Settings.options),
+        clibb.Separator("empty"),
+        clibb.Configuration(Settings.options,"Options:","Option I","Option II","Option III","Option IV",),
+        clibb.Separator("filled"),
+        clibb.Separator("empty"),
+        clibb.Display("Current Name:", adult.get_name),
+        clibb.Separator("empty"),
+        clibb.Action("o", "Set Name to 'Sophie'", action=adult.change_name, stealth=False),
+        clibb.Separator("filled"),
+        clibb.Separator("empty"),
+        clibb.Display("Current Text", Settings.user_input),
+        clibb.Separator("empty"),
+        clibb.Input("Input Text", Settings.user_input),
+        clibb.Separator("filled"),
+        clibb.Separator("empty"),
+        clibb.Display("Current Text", Settings.checkbox_state),
+        clibb.Separator("empty"),
+        clibb.Checkbox("Checkbox", Settings.checkbox_state),
+        clibb.Separator("filled"),
+        clibb.Separator("empty"),
+        clibb.Navigation("c", "Configuration", "Go to the 'Configuration' window with 'c'"),
+        clibb.Separator("filled"),
+        clibb.Separator("empty"),
+    ],
 }
 
-# Start CLIBB application
+# Another example window configuration to show navigation between windows.
+window_2 = {
+    "name": "Configuration",
+    "colors": {
+        "text": clibb.Color(255, 255, 255),
+        "background": clibb.Color(112, 60, 160),
+        "pass": clibb.Color(0, 255, 0),
+        "fail": clibb.Color(255, 0, 0),
+        "alert": clibb.Color(255, 255, 0),
+    },
+    "elements": [
+        clibb.Title("Configuration"),
+        clibb.Separator("empty"),
+        clibb.Navigation("h", "Home", "Go to the 'Home' window with 'h' or return with 'e'"),
+        clibb.Separator("filled"),
+        clibb.Separator("empty"),
+    ],
+}
+
+# Setup and run CLIBB!
 console = clibb.Application()
-console.add_window(window_1)
+console.add(window_2, window_1)
+console.remove(window_2)
+console.add(window_2)
+console.activate(window_1)
 console.run()
 ```
 
 ## Contributing
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+I'd love to collaborate with you! Feel free to fork this repository, implement or refactor as desired, and create a pull request for integration into the main branch. If you encounter any issues or have questions, open an [issue](https://github.com/Perytron/clibb/issues/new), and I'll be happy to assist.
 
 CLIBB is [GPL-3.0 licensed](https://github.com/Perytron/CLIBB/blob/doc/LICENSE.md).
