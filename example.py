@@ -19,11 +19,9 @@ adult = Person("Hannah")
 
 # Example Variables
 class Settings:
-    color_variable = clibb.Mutable("Option 2")
-    menu_variable = clibb.Mutable("Option B")
-    sound_variable = clibb.Mutable("Option IV")
-    message_variable = clibb.Mutable("Change me below!")
-    checkbox_variable = clibb.Mutable(True)
+    options = clibb.Mutable("Option IV")
+    user_input = clibb.Mutable("Change me below!")
+    checkbox_state = clibb.Mutable(True)
 
 
 # Example Windows
@@ -43,10 +41,10 @@ window_1 = {
         clibb.Display("How-to", "Navigate with 'w', 'a', 's', 'd'"),
         clibb.Display("", "Activate with 'q' and return with 'e'"),
         clibb.Separator("empty"),
-        clibb.Display("Current Option:", Settings.sound_variable),
+        clibb.Display("Current Option:", Settings.options),
         clibb.Separator("empty"),
         clibb.Configuration(
-            Settings.sound_variable,
+            Settings.options,
             "Options:",
             "Option I",
             "Option II",
@@ -62,14 +60,14 @@ window_1 = {
         ),
         clibb.Separator("filled"),
         clibb.Separator("empty"),
-        clibb.Display("Current Text", Settings.message_variable),
+        clibb.Display("Current Text", Settings.user_input),
         clibb.Separator("empty"),
-        clibb.Input("Input Text", Settings.message_variable),
+        clibb.Input("Input Text", Settings.user_input),
         clibb.Separator("filled"),
         clibb.Separator("empty"),
-        clibb.Display("Current Text", Settings.checkbox_variable),
+        clibb.Display("Current Text", Settings.checkbox_state),
         clibb.Separator("empty"),
-        clibb.Checkbox("Checkbox", Settings.checkbox_variable),
+        clibb.Checkbox("Checkbox", Settings.checkbox_state),
         clibb.Separator("filled"),
         clibb.Separator("empty"),
         clibb.Navigation(
