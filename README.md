@@ -2,12 +2,12 @@
 CLIBB (_Command-Line Interface Building Blocks_) is a Python library that streamlines, simplifies and speeds up your CLI creation. It provides **eight** unique and customizable building blocks to help you build a pretty, robust, and interactive CLI.
 
 ## Getting Started
-1. Install the CLIBB via `pip` by running `pip install clibb`.
+1. Install CLIBB using `pip` by running `pip install clibb`.
 1. Create a new Python file in your IDE of choice.
-1. Configure your windows using the provided building blocks detailed [here](https://github.com/Perytron/clibb/tree/doc#documentation).
+1. Setup window configurations using the provided building blocks detailed [here](https://github.com/Perytron/clibb/tree/doc#documentation).
 1. Initialize CLIBB with `console = clibb.Application()`
-1. Add your previously created window configurations with `console.add(window_1, window_2)`.
-1. Set a starting window with `console.activate(window_1)`.
+1. Add your previously created window configurations with `console.add(window_1, ...)`.
+1. Set the initial window with `console.activate(window_1)`.
 1. Finally execute CLIBB and enjoy with `console.run()`
 
 
