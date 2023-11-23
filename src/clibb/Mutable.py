@@ -1,23 +1,21 @@
-from typing import Union, Callable
+from typing import Callable, Any
 
 
 class Mutable:
     """
-    The 'Mutable' class is a container that holds a value of type 'str', 'int',
-    'float', 'bool' or a function that evaluates to a 'str'-convertible value.
-    The container allows these usually non-mutable types to be mutable by reference.
+    The 'Mutable' class is a wrapper that allows any (non-mutable) type,
+    class and method to be mutable.
+
+    Make sure that any type and class implements __str__ and any method
+    returns a 'str'-convertible value, else you will receive a runtime exception.
     """
 
-    def __new__(cls, value: Union[float, int, str, bool, Callable]) -> "Mutable":
-        if isinstance(value, (float, int, str, bool, Callable)):
-            return object.__new__(cls)
+    def __new__(cls, value: Any = None) -> "Mutable":
         if isinstance(value, Mutable):
             return value
-        raise TypeError(
-            "'Mutable' must be instanciated with a parameter of type 'str', 'int', 'float', 'bool' or 'callable'."
-        )
+        return super().__new__(cls)
 
-    def __init__(self, value: Union[float, int, str, bool, Callable]) -> None:
+    def __init__(self, value: Any = None) -> None:
         self.set(value)
 
     def __str__(self) -> str:
@@ -30,10 +28,17 @@ class Mutable:
                 result = str(self.__value())
             except Exception as e:
                 raise ValueError(
-                    "Callable must return a string-convertible value."
+                    "Wrapped callable must return a string-convertible value."
                 ) from e
             return result
+        if self.__value is None:
+            return " "
         return str(self.unwrap())
+
+    def __eq__(self, other: object) -> bool:
+        if str(self) == str(other):
+            return True
+        return False
 
     def __len__(self) -> int:
         return len(str(self))
@@ -44,29 +49,18 @@ class Mutable:
         """
         return type(self.unwrap())
 
-    def unwrap(self) -> Union[float, int, str, bool, Callable]:
+    def unwrap(self) -> Any:
         """
         Unwrap the variable that is wrapped inside the 'Mutable' container.
         """
         return self.__value
 
-    def set(self, value: Union[float, int, str, bool, Callable]) -> "Mutable":
+    def set(self, value: Any) -> "Mutable":
         """
         Assign a new value to this object and return the object.
         """
-        self.__check(value, float, int, str, bool, Callable, Mutable)
         if isinstance(value, Mutable):
             self.__value = value.unwrap()
         else:
             self.__value = value
         return self
-
-    def __check(self, value: Union[float, int, str, Callable], *types) -> None:
-        """
-        Check if 'value' is of a given type or types. Raise TypeError if not.
-        """
-        if not isinstance(value, types):
-            expected_types = ", ".join(t.__name__ for t in types)
-            raise TypeError(
-                f"Expected type(s): {expected_types}, got: {type(value).__name__}"
-            )
