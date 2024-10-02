@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="clibb",
-    version="0.2.1",
+    version="0.2.2",
     description="CLIBB (Command-Line Interface Building Blocks) streamlines, simplifies and speeds up your CLI creation.",
     long_description=long_description,
     long_description_content_type="text/markdown",
