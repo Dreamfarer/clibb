@@ -9,8 +9,8 @@ setup(
     description="CLIBB (Command-Line Interface Building Blocks) streamlines, simplifies and speeds up your CLI creation.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="Perytron",
-    url="https://github.com/Perytron/clibb",
+    author="Dreamfarer",
+    url="https://github.com/Dreamfarer/clibb",
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     classifiers=[
